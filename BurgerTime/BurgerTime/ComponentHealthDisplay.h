@@ -13,6 +13,7 @@ public:
 
 	//void Update(float deltaTime) override;
 	void OnNotify(Observer::Event event, void* pData = nullptr) override;
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	ComponentHealthDisplay(const ComponentHealthDisplay& other) = delete;
 	ComponentHealthDisplay(ComponentHealthDisplay&& other) noexcept = delete;

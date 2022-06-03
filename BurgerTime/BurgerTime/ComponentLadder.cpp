@@ -7,6 +7,8 @@
 #include "GameObject.h"
 #include "CollisionManager.h"
 #include "DebugManager.h"
+#include "BurgerTimeGlobal.h"
+using namespace SimonGlobalEnums;
 
 //-------------------------------------------------------------------------
 //	Static datamembers
@@ -29,6 +31,12 @@ ComponentLadder::ComponentLadder(dae::GameObject* pParent, const CollisionBox& c
 	,m_CanClimbDown{canClimbDown}
 {
 	//CollisionManager::GetInstance().AddLadder(this);
+	if (m_CanClimbUp && m_CanClimbDown)
+		CollisionManager::GetInstance().AddCollidingObject(static_cast<int32_t>(CollisionTag::ladder), this);
+	else if (m_CanClimbUp)
+		CollisionManager::GetInstance().AddCollidingObject(static_cast<int32_t>(CollisionTag::ladderUpward), this);
+	else if (m_CanClimbDown)
+		CollisionManager::GetInstance().AddCollidingObject(static_cast<int32_t>(CollisionTag::ladderDownward), this);
 }
 //-------------------------------------------------------------------------
 //	Member functions

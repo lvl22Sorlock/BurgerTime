@@ -38,6 +38,7 @@ public:
 
 	virtual void Update(float deltaTime) override;
 	virtual void Render() const override;
+	virtual bool IsCollidingWithOther(const CollisionBox& otherCollisionBox) const override { return m_CollisionBox.IsColliding(otherCollisionBox); };
 
 
 	void InitializeMovementInput(dae::InputManager& inputManager, char left, char right, char up, char down);

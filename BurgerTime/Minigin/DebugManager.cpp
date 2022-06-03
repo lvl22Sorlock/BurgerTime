@@ -31,6 +31,7 @@ void DebugManager::SetIsDebugRendering(bool isDebugRendering)
 
 void DebugManager::RenderDebugSquare(const Vector2<float>& pos, const Vector2<float>& widthHeight)
 {
+	if (!m_IsDebugRendering) return;
 	if (m_DebugSquareTexture == nullptr) return;
 	dae::Renderer::GetInstance().RenderTexture(*m_DebugSquareTexture, pos.x, pos.y, widthHeight.x, widthHeight.y);
 }

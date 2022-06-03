@@ -7,11 +7,14 @@
 #include <algorithm>
 #include "InputManager.h"
 #include "CollisionManager.h"
-#include "GlobalConstants.h"
+#include "BurgerTimeGlobal.h"
 #include "DebugManager.h"
 
 using namespace dae;
 using namespace SimonGlobalConstants;
+using namespace SimonGlobalEnums;
+using namespace SimonGlobalFunctions;
+
 
 //-------------------------------------------------------------------------
 //	Static datamembers
@@ -58,9 +61,14 @@ void ComponentCharacterController::Update(float deltaTime)
 	SetAnimationVariables();
 	CalculateCollisionBox();
 
+	ComponentBase* pLadderComponent{};
 	// ladder collision
-	//m_IsOnUpwardLadder = CollisionManager::GetInstance().IsCollidingWithUpLadder(m_CollisionBox, m_LadderPos);
-	//m_IsOnDownwardLadder = CollisionManager::GetInstance().IsCollidingWithDownLadder(m_CollisionBox, m_LadderPos);
+	m_IsOnUpwardLadder 
+		= CollisionManager::GetInstance().IsCollidingWithObjectOfTag(static_cast<int32_t>(CollisionTag::ladderUpward), m_CollisionBox, &pLadderComponent)
+		|| CollisionManager::GetInstance().IsCollidingWithObjectOfTag(static_cast<int32_t>(CollisionTag::ladder), m_CollisionBox, &pLadderComponent);
+	m_IsOnDownwardLadder 
+		= CollisionManager::GetInstance().IsCollidingWithObjectOfTag(static_cast<int32_t>(CollisionTag::ladderDownward), m_CollisionBox, &pLadderComponent)
+		|| CollisionManager::GetInstance().IsCollidingWithObjectOfTag(static_cast<int32_t>(CollisionTag::ladder), m_CollisionBox, &pLadderComponent);
 	m_IsOnLadder = m_IsOnUpwardLadder || m_IsOnDownwardLadder;
 
 	if (m_IsMoving)

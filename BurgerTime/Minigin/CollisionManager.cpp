@@ -28,7 +28,8 @@ bool CollisionManager::IsCollidingWithObjectOfTag(int32_t objectTag, const Colli
 	for (ComponentBase* pOtherComponent : m_CollidingObjectVectorsByTagMap.at(objectTag))
 	{
 		if (pOtherComponent->IsCollidingWithOther(collisionBox)) {
-			*pOtherComponentPtr = pOtherComponent;
+			if (pOtherComponentPtr)
+				*pOtherComponentPtr = pOtherComponent;
 			return true;
 		}
 	}

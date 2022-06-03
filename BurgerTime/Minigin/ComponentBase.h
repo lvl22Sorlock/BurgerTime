@@ -21,7 +21,7 @@ public:
 	virtual void FixedUpdate(float) {};
 	virtual void Render() const {};
 
-	virtual bool IsCollidingWithOther(const CollisionBox& /*otherCollisionBox*/) const { return false; };
+	virtual bool IsCollidingWithOther(const CollisionBox& /*otherCollisionBox*/) const = 0;
 
 	ComponentBase(const ComponentBase& other) = delete;
 	ComponentBase(ComponentBase&& other) noexcept = delete;

@@ -9,7 +9,7 @@ public:
 	virtual ~ComponentTimer() = default;
 
 	virtual void Update(float deltaTime) override;
-	virtual void Render() const override;
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	float GetCurrentFPS() const;
 	float GetTotalTime() const;
@@ -25,9 +25,17 @@ public:
 private:
 	virtual std::size_t GetTypeHash() override;
 
+	void UpdateCurrentFPS(float deltaTime);
+
 	float m_CurrentFPS;
 	float m_TotalTime;
 	int m_TotalFrames;
 	float m_AverageFPS;
+
+	const float m_FPS_BUFFER_DURATION;
+	float m_TimeSinceBufferSwitch;
+	std::pair<int, float> m_FPSBufferNr1;
+	std::pair<int, float> m_FPSBufferNr2;
+	std::pair<int, float> m_FPSBufferNr3;
 };
 

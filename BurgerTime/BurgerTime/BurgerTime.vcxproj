@@ -172,6 +172,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BurgerTime.cpp" />
+    <ClCompile Include="BurgerTimeGlobal.cpp" />
     <ClCompile Include="ComponentCharacterController.cpp" />
     <ClCompile Include="ComponentFollowOther.cpp" />
     <ClCompile Include="ComponentHealth.cpp" />
@@ -199,7 +200,7 @@
     <ClInclude Include="ComponentTexture.h" />
     <ClInclude Include="ComponentTimer.h" />
     <ClInclude Include="FPSCounterBehaviour.h" />
-    <ClInclude Include="GlobalConstants.h" />
+    <ClInclude Include="BurgerTimeGlobal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

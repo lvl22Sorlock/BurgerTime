@@ -11,6 +11,7 @@ public:
 	virtual ~FPSCounterBehaviour() = default;
 
 	virtual void Update(float deltaTime) override;
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	FPSCounterBehaviour(const FPSCounterBehaviour& other) = delete;
 	FPSCounterBehaviour(FPSCounterBehaviour&& other) noexcept = delete;

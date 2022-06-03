@@ -28,6 +28,7 @@ public:
 	//-------------------------------------------------------------------------
 
 	void Update(float deltaTime) override;
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 private:
 	//-------------------------------------------------------------------------

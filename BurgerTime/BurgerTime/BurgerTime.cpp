@@ -30,6 +30,7 @@ int main(int, char* [])
 #include "SceneManager.h"
 #include "InputManager.h"
 #include "ResourceManager.h"
+#include "DebugManager.h"
 #pragma endregion
 
 #pragma region ComponentIncludes
@@ -49,11 +50,18 @@ int main(int, char* [])
 #include "FPSCounterBehaviour.h"
 #pragma endregion
 
-#include "GlobalConstants.h"
+#include "BurgerTimeGlobal.h"
 using namespace SimonGlobalConstants;
 
 void LoadGame(void)
 {
+#ifdef _DEBUG
+	DebugManager::GetInstance().SetIsDebugRendering(true);
+#else
+	DebugManager::GetInstance().SetIsDebugRendering(false);
+#endif // _DEBUG
+
+
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 
 #pragma region DefaultObjects

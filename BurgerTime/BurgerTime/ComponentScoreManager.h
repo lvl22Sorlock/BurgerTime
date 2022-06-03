@@ -10,6 +10,7 @@ public:
 
 	int GetCurrentScore() const;
 	void IncreaseScore(int scoreToAdd);
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	ComponentScoreManager(const ComponentScoreManager& other) = delete;
 	ComponentScoreManager(ComponentScoreManager&& other) noexcept = delete;

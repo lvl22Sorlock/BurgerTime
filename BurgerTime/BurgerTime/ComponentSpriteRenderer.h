@@ -49,6 +49,7 @@ public:
 
 	virtual void Render() const override;
 	virtual void Update(float deltaTime) override;
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	void SetSpritesheet(const std::string & filename);
 

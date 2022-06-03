@@ -13,6 +13,7 @@ public:
 
 	//void Update(float deltaTime) override;
 	void OnNotify(Event event, void* pData = nullptr) override;
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	ComponentScoreDisplay(const ComponentScoreDisplay& other) = delete;
 	ComponentScoreDisplay(ComponentScoreDisplay&& other) noexcept = delete;

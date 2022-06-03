@@ -17,6 +17,7 @@ public:
 	virtual ~ComponentTexture() = default;
 
 	virtual void Render() const override;
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	void SetTexture(const std::string& filename);
 

@@ -11,6 +11,7 @@ public:
 	int GetCurrentHealth() const;
 	int GetMaxHealth() const;
 	void DealDamage(int damageToDeal);
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	ComponentHealth(const ComponentHealth& other) = delete;
 	ComponentHealth(ComponentHealth&& other) noexcept = delete;

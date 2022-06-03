@@ -19,6 +19,7 @@ public:
 
 	virtual void Update(float deltaTime) override;
 	virtual void Render() const override;
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	void SetText(const std::string& text);
 	//void SetPosition(float x, float y);

@@ -18,6 +18,7 @@ using namespace dae;
 class CollisionManager final : public Singleton<CollisionManager>
 {
 public:
+	CollisionManager() = default;
 	//enum class CollidingObjectType
 	//{
 	//	ladder,
@@ -49,8 +50,6 @@ public:
 	//bool IsCollidingWithUpLadder(const CollisionBox& collisionBox, Vector2<float>& ladderXPosOut) const;
 	//bool IsCollidingWithDownLadder(const CollisionBox& collisionBox, Vector2<float>& ladderXPosOut) const;
 
-protected:
-	CollisionManager() = default;
 private:
 	//-------------------------------------------------------------------------
 	//	Private Member Functions

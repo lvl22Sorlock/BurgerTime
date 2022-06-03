@@ -57,6 +57,9 @@
     <ClCompile Include="FPSCounterBehaviour.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="BurgerTimeGlobal.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimePCH.h">
@@ -95,7 +98,7 @@
     <ClInclude Include="ComponentTimer.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalConstants.h">
+    <ClInclude Include="BurgerTimeGlobal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FPSCounterBehaviour.h">
