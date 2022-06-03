@@ -23,6 +23,8 @@ public:
 	ComponentTimer& operator=(ComponentTimer&& other)	noexcept = delete;
 
 private:
+	virtual std::size_t GetTypeHash() override;
+
 	float m_CurrentFPS;
 	float m_TotalTime;
 	int m_TotalFrames;

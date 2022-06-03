@@ -5,6 +5,12 @@
 
 
 
+std::size_t ComponentScoreManager::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
+
 
 
 ComponentScoreManager::ComponentScoreManager(dae::GameObject* pParent)

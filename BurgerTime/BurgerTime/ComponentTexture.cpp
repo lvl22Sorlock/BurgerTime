@@ -4,21 +4,22 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 
+std::size_t ComponentTexture::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
 ComponentTexture::ComponentTexture(dae::GameObject* pParent)
 	: ComponentBase(pParent)
 	, m_IsUsingWidthHeight{false}
 	, m_WidthHeight{}
-{
-
-}
+{}
 
 ComponentTexture::ComponentTexture(dae::GameObject* pParent, const Vector2<float>& widthHeight)
 	: ComponentBase(pParent)
 	, m_IsUsingWidthHeight{true}
 	, m_WidthHeight{widthHeight}
-{
-
-}
+{}
 
 void ComponentTexture::Render() const
 {

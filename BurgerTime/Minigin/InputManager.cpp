@@ -11,13 +11,6 @@
 
 using namespace dae;
 
-//InputManager* InputManager::pInstance{ nullptr };
-//InputManager* InputManager::GetInstance()
-//{
-//	return pInstance;
-//}
-
-
 InputManager::InputManager()
 	:m_CurrentInputState{}
 	,m_PreviousInputState{}
@@ -49,8 +42,6 @@ bool dae::InputManager::ProcessInput()
 		//return false;
 	}
 		SDL_Event e;
-		//size_t pressedKeyNrIdx{0};
-		//size_t releasedKeyNrIdx{ 0 };
 		for (std::pair<const char, bool>& isKeyPressed : m_SDLPressedKeys)
 		{
 			isKeyPressed.second = false;
@@ -62,11 +53,6 @@ bool dae::InputManager::ProcessInput()
 
 		while (SDL_PollEvent(&e))
 		{
-			//if (pressedKeyNrIdx >= m_SDLPressedKeys.size())			
-			//	m_SDLPressedKeys.reserve(m_SDLPressedKeys.size() * 1.5f);
-			//if (releasedKeyNrIdx >= m_SDLReleasedKeys.size())
-			//	m_SDLReleasedKeys.reserve(m_SDLReleasedKeys.size() * 1.5f);
-
 			switch (e.type)
 			{
 			case SDL_QUIT:
@@ -87,42 +73,8 @@ bool dae::InputManager::ProcessInput()
 			//process event for IMGUI
 			ImGui_ImplSDL2_ProcessEvent(&e);
 		}
-		//if (pressedKeyNrIdx >= m_SDLPressedKeys.size())
-		//	m_SDLPressedKeys.reserve(m_SDLPressedKeys.size() * 1.5f);
-		//if (releasedKeyNrIdx >= m_SDLReleasedKeys.size())
-		//	m_SDLReleasedKeys.reserve(m_SDLReleasedKeys.size() * 1.5f);
-
-		//m_SDLPressedKeys[pressedKeyNrIdx] = static_cast<int>(SDL_QUIT);
-		//m_SDLReleasedKeys[releasedKeyNrIdx] = static_cast<int>(SDL_QUIT);
-
-		//return true;
-
 	return true;
-	//return false;
 }
-
-//bool InputManager::IsPressed(ControllerButton buttonToCheck) const
-//{
-//	const XINPUT_GAMEPAD gamePadState = m_CurrentInputState.Gamepad;
-//	const unsigned int buttonValue = static_cast<unsigned>(gamePadState.wButtons);
-//	const unsigned int previousButtonValue = static_cast<unsigned>((m_PreviousInputState.Gamepad).wButtons);
-//
-//	 if button wasn't released
-//	if (!(buttonValue == previousButtonValue)) return false;
-//
-//	 if inputmanager doesn't know what this button is
-//	if (m_ControllerButtonValues.find(buttonValue) == m_ControllerButtonValues.end()) return false;
-//
-//	ControllerButton pressedButton = m_ControllerButtonValues.at(buttonValue);
-//	if (pressedButton == buttonToCheck)
-//		return true;
-//
-//	// Keyboard
-//	 if button wasn't released not necessary
-//
-//
-//	return false;
-//}
 
 void InputManager::InitializeMaps()	// to actually use this there should be public functions to do this
 {
@@ -130,11 +82,6 @@ void InputManager::InitializeMaps()	// to actually use this there should be publ
 	m_ControllerButtonValues[XINPUT_GAMEPAD_B] = ControllerButton::ButtonB;
 	m_ControllerButtonValues[XINPUT_GAMEPAD_X] = ControllerButton::ButtonX;
 	m_ControllerButtonValues[XINPUT_GAMEPAD_Y] = ControllerButton::ButtonY;
-
-	//m_CommandButtons[ControllerButton::ButtonA] = JumpCommand();
-	//m_CommandButtons[ControllerButton::ButtonB] = DuckCommand();
-	//m_CommandButtons[ControllerButton::ButtonX] = FireCommand();
-	//m_CommandButtons[ControllerButton::ButtonY] = FartCommand();
 }
 
 void InputManager::HandleInput()
@@ -310,9 +257,5 @@ char InputManager::GetCapitalChar(char possiblyCapitalChar) const
 {
 	possiblyCapitalChar = static_cast<char>(std::toupper(possiblyCapitalChar));
 
-	/*if (possiblyCapitalChar < 'A' || possiblyCapitalChar > 'Z')
-	{
-		possiblyCapitalChar = static_cast<char>(static_cast<int>(possiblyCapitalChar) + (static_cast<int>('a') - static_cast<int>('A')));
-	}*/
 	return possiblyCapitalChar;
 }

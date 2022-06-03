@@ -1,6 +1,11 @@
 #include "BurgerTimePCH.h"
 #include "ComponentTimer.h"
 
+std::size_t ComponentTimer::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
 ComponentTimer::ComponentTimer(dae::GameObject* pParent)
 	: ComponentBase(pParent)
 	, m_CurrentFPS{}

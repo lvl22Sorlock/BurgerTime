@@ -78,6 +78,8 @@ private:
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
+	virtual std::size_t GetTypeHash() override;
+
 	void GoToNextSprite();
 	Vector2<int> GetSpriteSheetPos() const;
 	void ResetAnimation();

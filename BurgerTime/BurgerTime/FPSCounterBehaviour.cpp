@@ -4,6 +4,11 @@
 #include "ComponentTimer.h"
 #include "ComponentText.h"
 
+std::size_t FPSCounterBehaviour::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
 FPSCounterBehaviour::FPSCounterBehaviour(dae::GameObject* pParent)
 	:ComponentBase(pParent)
 	,MIN_TIME_BETWEEN_FPS_UPDATES{0.15f}

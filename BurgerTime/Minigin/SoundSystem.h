@@ -2,16 +2,13 @@
 //-------------------------------------------------------------------------
 //	Include Files
 //-------------------------------------------------------------------------
-//#include "Singleton.h"
 #include <queue>
 #include <string>
-
-//using namespace dae;
 
 //-------------------------------------------------------------------------
 //	SoundSystem Class
 //-------------------------------------------------------------------------
-class SoundSystem /*: public Singleton<SoundSystem>*/
+class SoundSystem
 {
 public:
 	SoundSystem();

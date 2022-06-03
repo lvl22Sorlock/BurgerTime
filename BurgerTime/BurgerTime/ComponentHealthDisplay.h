@@ -19,6 +19,8 @@ public:
 	ComponentHealthDisplay& operator=(const ComponentHealthDisplay& other) = delete;
 	ComponentHealthDisplay& operator=(ComponentHealthDisplay&& other)	noexcept = delete;
 private:
+	virtual std::size_t GetTypeHash() override;
+
 	void Initialize();
 	void Initialize(dae::GameObject* pHealthComponentSource);
 

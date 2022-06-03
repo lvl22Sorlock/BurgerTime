@@ -7,6 +7,12 @@
 #include "Texture2D.h"
 #include "GameObject.h"
 
+std::size_t ComponentText::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
+
 ComponentText::ComponentText(dae::GameObject* pParent, const std::string& text, const std::shared_ptr<dae::Font>& font)
 	: ComponentBase(pParent)
 	,m_NeedsUpdate(true), m_Text(text), m_Font(font), m_TextTexture(nullptr), m_Transform{pParent->GetTransformConstRef()}

@@ -13,4 +13,3 @@
 #include <glm/glm.hpp>
 #include <SDL.h>
 #pragma warning (pop)
-

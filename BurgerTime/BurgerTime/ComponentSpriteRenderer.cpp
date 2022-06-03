@@ -4,6 +4,13 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 
+std::size_t ComponentSpriteRenderer::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
+
+
 ComponentSpriteRenderer::ComponentSpriteRenderer(dae::GameObject* pParent, const Vector2<float>& widthHeight, bool hasAnimations, const Vector2<float>& posOffset)
 	:ComponentBase(pParent)
 	, m_SPRITE_WIDTH{16}	// for player1, should later be via parameter

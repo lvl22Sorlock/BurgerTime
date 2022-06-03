@@ -51,6 +51,8 @@ private:
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
+	virtual std::size_t GetTypeHash() override;
+
 	void CalculateMovement(float deltaTime);
 	void SetAnimationVariables();
 	void CalculateCollisionBox();

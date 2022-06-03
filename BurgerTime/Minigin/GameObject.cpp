@@ -130,16 +130,6 @@ size_t dae::GameObject::GetChildCount() const
 	return m_ChildrenPtrs.size();
 }
 
-//GameObject* dae::GameObject::GetChildAtIdx(int index) const
-//{
-//	return m_ChildrenPtrs[index];
-//}
-//
-//void dae::GameObject::RemoveChild(int index)
-//{
-//	m_ChildrenPtrs.erase(m_ChildrenPtrs.begin() + index);
-//}
-
 void dae::GameObject::RemoveChild(GameObject* pChild)
 {
 	auto childIterator{ m_ChildrenPtrs.find(pChild) };
@@ -153,21 +143,9 @@ void dae::GameObject::RemoveChild(GameObject* pChild)
 
 void dae::GameObject::AddChild(GameObject* pChild)
 {
-	//m_ChildrenPtrs.push_back(pChild);
 	m_ChildrenPtrs.insert(pChild);
 	pChild->SetParent(this);
 }
-
-//void GameObject::AddComponent(const std::string& componentName, ComponentBase* pComponent)
-//{
-//	if (m_ComponentPtrs.find(componentName) != m_ComponentPtrs.end())
-//	{
-//		delete m_ComponentPtrs[componentName];
-//		m_ComponentPtrs[componentName] = nullptr;
-//	}
-//
-//	m_ComponentPtrs[componentName] = pComponent;
-//}
 
 void GameObject::AddComponent(ComponentBase* pComponent)
 {
@@ -181,16 +159,6 @@ void GameObject::AddComponent(ComponentBase* pComponent)
 	m_ComponentPtrs[typeHash] = pComponent;
 }
 
-//ComponentBase* GameObject::GetComponentPtr(const std::string& componentName)
-//{
-//	if (m_ComponentPtrs.find(componentName) == m_ComponentPtrs.end())
-//	{
-//		throw;
-//	}
-//
-//	return m_ComponentPtrs[componentName];
-//}
-
 ComponentBase* GameObject::GetComponentPtr(const std::type_info& componentType)
 {
 	size_t typeHash{ componentType.hash_code() };
@@ -202,11 +170,6 @@ ComponentBase* GameObject::GetComponentPtr(const std::type_info& componentType)
 
 	return m_ComponentPtrs[typeHash];
 }
-
-//void GameObject::RemoveComponent(const std::string& componentName)
-//{
-//	m_ComponentPtrs.erase(m_ComponentPtrs.find(componentName));
-//}
 
 void GameObject::RemoveComponent(const std::type_info& componentType)
 {

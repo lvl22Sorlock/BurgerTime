@@ -21,6 +21,12 @@ using namespace SimonGlobalConstants;
 //-------------------------------------------------------------------------
 //	Constructor(s) & Destructor
 //-------------------------------------------------------------------------
+
+std::size_t ComponentCharacterController::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
 ComponentCharacterController::ComponentCharacterController(dae::GameObject* pParent, const Vector2<float>& widthHeight)
 	:ComponentBase(pParent)
 	// Movement
@@ -36,10 +42,7 @@ ComponentCharacterController::ComponentCharacterController(dae::GameObject* pPar
 	, m_LadderPos{0,0}
 	, m_WidthHeight{widthHeight}
 	, m_CollisionBox({ pParent->GetPosition().x, pParent->GetPosition().y}, widthHeight.x, widthHeight.y)
-
-{
-
-}
+{}
 
 ComponentCharacterController::~ComponentCharacterController()
 {

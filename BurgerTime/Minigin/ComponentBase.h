@@ -8,6 +8,7 @@ namespace std
 {
 	class type_info;
 }
+#include <typeinfo>
 
 class ComponentBase
 {
@@ -29,6 +30,8 @@ public:
 protected:
 	ComponentBase(dae::GameObject* pParent);
 	dae::GameObject* m_pParentGameObject;
-	const std::type_info& m_DerivedTypeId;
+
+	//https://stackoverflow.com/questions/32016809/using-typeid-to-get-name-of-derived-class/32016926
+	virtual std::size_t GetTypeHash() = 0;
 };
 

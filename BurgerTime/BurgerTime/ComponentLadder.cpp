@@ -16,6 +16,12 @@
 //-------------------------------------------------------------------------
 //	Constructor(s) & Destructor
 //-------------------------------------------------------------------------
+
+std::size_t ComponentLadder::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
 ComponentLadder::ComponentLadder(dae::GameObject* pParent, const CollisionBox& collisionBox, bool canClimbUp, bool canClimbDown)
 	:ComponentBase(pParent)
 	,m_CollisionBox{collisionBox}
@@ -24,11 +30,6 @@ ComponentLadder::ComponentLadder(dae::GameObject* pParent, const CollisionBox& c
 {
 	//CollisionManager::GetInstance().AddLadder(this);
 }
-
-ComponentLadder::~ComponentLadder()
-{
-}
-
 //-------------------------------------------------------------------------
 //	Member functions
 //-------------------------------------------------------------------------

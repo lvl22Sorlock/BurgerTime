@@ -19,6 +19,8 @@ public:
 	ComponentScoreDisplay& operator=(const ComponentScoreDisplay& other) = delete;
 	ComponentScoreDisplay& operator=(ComponentScoreDisplay&& other)	noexcept = delete;
 private:
+	virtual std::size_t GetTypeHash() override;
+
 	void Initialize();
 	void Initialize(dae::GameObject* pScoreComponentSource);
 

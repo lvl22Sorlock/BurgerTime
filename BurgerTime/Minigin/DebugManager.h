@@ -33,12 +33,7 @@ public:
 	//-------------------------------------------------------------------------
 
 	void SetIsDebugRendering(bool isDebugRendering);
-	//static bool IsDebugRendering();
-
-	//void SetDebugSquareTexture(const std::string& filename);
-	//std::shared_ptr<dae::Texture2D> GetDebugSquareTexturePtr() const;
 	void RenderDebugSquare(const Vector2<float>& pos, const Vector2<float>& widthHeight);
-	//void RenderDebugSquare(const dae::glm::vec3& pos, const Vector2<float>& widthHeight) const;
 
 private:
 	//-------------------------------------------------------------------------

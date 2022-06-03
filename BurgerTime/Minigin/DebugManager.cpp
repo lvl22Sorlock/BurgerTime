@@ -29,23 +29,6 @@ void DebugManager::SetIsDebugRendering(bool isDebugRendering)
 	m_IsDebugRendering = isDebugRendering;
 }
 
-//bool DebugManager::IsDebugRendering()
-//{
-//	return m_IsDebugRendering;
-//}
-
-//void DebugManager::SetDebugSquareTexture(const std::string& filename)
-//{
-//	m_DebugSquareTexture = dae::ResourceManager::GetInstance().LoadTexture(filename);
-//}
-
-//std::shared_ptr<dae::Texture2D> DebugManager::GetDebugSquareTexturePtr() const
-//{
-//	if (!m_IsDebugRendering) return nullptr;
-//
-//	return m_DebugSquareTexture;
-//}
-
 void DebugManager::RenderDebugSquare(const Vector2<float>& pos, const Vector2<float>& widthHeight)
 {
 	if (m_DebugSquareTexture == nullptr) return;

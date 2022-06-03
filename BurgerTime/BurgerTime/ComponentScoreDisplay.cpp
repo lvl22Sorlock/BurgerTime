@@ -6,6 +6,12 @@
 #include "ComponentScoreManager.h"
 #include <string>
 
+std::size_t ComponentScoreDisplay::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
+
 ComponentScoreDisplay::ComponentScoreDisplay(dae::GameObject* pParent, const std::string& extraDisplayText)
 	: ComponentBase(pParent)
 	, m_ExtraText{extraDisplayText}

@@ -12,7 +12,7 @@ class ComponentLadder final : public ComponentBase
 {
 public:
 	ComponentLadder(dae::GameObject* pParent, const CollisionBox& collisionBox, bool canClimbUp = true, bool canClimbDown = true);
-	~ComponentLadder();
+	~ComponentLadder() = default;
 
 	//-------------------------------------------------------------------------
 	//	Copy/move constructors and assignment operators
@@ -40,8 +40,7 @@ private:
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-
-
+	virtual std::size_t GetTypeHash() override;
 
 	//-------------------------------------------------------------------------
 	//	Data Members

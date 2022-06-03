@@ -16,6 +16,8 @@ public:
 	ComponentScoreManager& operator=(const ComponentScoreManager& other) = delete;
 	ComponentScoreManager& operator=(ComponentScoreManager&& other)	noexcept = delete;
 private:
+	virtual std::size_t GetTypeHash() override;
+
 	int m_CurrentScore;
 };
 

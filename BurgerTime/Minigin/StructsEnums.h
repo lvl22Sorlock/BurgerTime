@@ -1,21 +1,6 @@
 #pragma once
 #include <cmath>
 
-//struct Rectf
-//{
-//	Rectf(float x, float y, float widthParam, float heightParam)
-//		:xPos{x}
-//		,yPos{y}
-//		,width{widthParam}
-//		,height{heightParam}
-//	{}
-//
-//	float xPos{};
-//	float yPos{};
-//	float width{};
-//	float height{};
-//};
-
 template <typename T>
 struct Vector2
 {
@@ -122,30 +107,9 @@ struct CollisionBox
 		return Vector2<float>(rightTop.x - leftBottom.x, rightTop.y - leftBottom.y);
 	}
 
-	//CollisionBox(const Vector2<float>& leftTopParam, float width, float height)
-	//	:leftTop(leftTopParam)
-	//	,rightBottom{ leftTopParam.x + width, leftTopParam.y - height }
-	//{}
-
-	//CollisionBox(const Vector2<float>& leftTopParam, const Vector2<float>& rightBottomParam)
-	//	:leftTop(leftTopParam)
-	//	,rightBottom{rightBottomParam}
-	//{}
-
-	//Vector2<float> leftTop{};
-	//Vector2<float> rightBottom{};
-
 
 	bool IsColliding(const CollisionBox& other) const
 	{
-		//if (rightTop.x >= other.leftBottom.x &&     // r1 right edge past r2 left
-		//	leftBottom.x <= other.rightTop.x &&       // r1 left edge past r2 right
-		//	rightTop.y >= other.leftBottom.y &&       // r1 top edge past r2 bottom
-		//	leftBottom.y <= other.rightTop.y) {       // r1 bottom edge past r2 top
-		//	return true;
-		//}
-		//return false;
-
 		if (leftBottom.x > other.rightTop.x
 			||
 			other.leftBottom.x > rightTop.x

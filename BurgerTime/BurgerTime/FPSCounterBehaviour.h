@@ -18,6 +18,8 @@ public:
 	FPSCounterBehaviour& operator=(FPSCounterBehaviour&& other)	noexcept = delete;
 
 private:
+	virtual std::size_t GetTypeHash() override;
+
 	void Initialize();
 
 	const float MIN_TIME_BETWEEN_FPS_UPDATES;

@@ -17,6 +17,8 @@ public:
 	ComponentHealth& operator=(const ComponentHealth& other) = delete;
 	ComponentHealth& operator=(ComponentHealth&& other)	noexcept = delete;
 private:
+	virtual std::size_t GetTypeHash() override;
+
 	void Die();
 
 	int m_MaxHealth;

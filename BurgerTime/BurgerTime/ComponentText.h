@@ -29,6 +29,8 @@ public:
 	ComponentText& operator=(ComponentText&& other)	noexcept = delete;
 
 private:
+	virtual std::size_t GetTypeHash() override;
+
 	bool m_NeedsUpdate;
 	std::string m_Text;
 	std::shared_ptr<dae::Font> m_Font;

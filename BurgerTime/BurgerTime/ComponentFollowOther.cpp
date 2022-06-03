@@ -14,6 +14,12 @@
 //-------------------------------------------------------------------------
 //	Constructor(s) & Destructor
 //-------------------------------------------------------------------------
+
+std::size_t ComponentFollowOther::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
 ComponentFollowOther::ComponentFollowOther(dae::GameObject* pParent, dae::GameObject* pTarget)
 	:ComponentBase(pParent)
 	, m_pTarget{pTarget}

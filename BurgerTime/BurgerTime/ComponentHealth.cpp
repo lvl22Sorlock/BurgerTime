@@ -2,6 +2,12 @@
 #include "ComponentHealth.h"
 
 
+std::size_t ComponentHealth::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
+
 ComponentHealth::ComponentHealth(dae::GameObject* pParent, int maxHealth)
 	: ComponentBase(pParent)
 	, m_MaxHealth{maxHealth}

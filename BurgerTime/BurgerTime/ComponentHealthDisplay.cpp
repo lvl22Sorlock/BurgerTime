@@ -6,6 +6,12 @@
 #include "ComponentHealth.h"
 #include <string>
 
+std::size_t ComponentHealthDisplay::GetTypeHash()
+{
+	return typeid(*this).hash_code();
+}
+
+
 ComponentHealthDisplay::ComponentHealthDisplay(dae::GameObject* pParent, const std::string& extraDisplayText)
 	: ComponentBase(pParent)
 	, m_ExtraText{extraDisplayText}

@@ -58,22 +58,16 @@ namespace dae
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
-		//static InputManager* GetInstance();
-
 		InputManager();
 		~InputManager();	// inputManager owns the commands
 
 		void HandleInput();
-		bool ProcessInput();
-		//bool IsPressed(ControllerButton button) const;
-		
+		bool ProcessInput();		
 		
 		void AddCommandToCommandList(Command* pNewCommand);
 		bool AddCommandToButton(ControllerButton button, Command* pNewCommand);
 		bool AddCommandToButton(char button, InputType inputType, Command* pNewCommand);
 	private:
-		//static InputManager* pInstance;
-
 		// Controller
 		bool IsButtonUp(ControllerButton button) const;
 		bool IsButtonDown(ControllerButton button) const;

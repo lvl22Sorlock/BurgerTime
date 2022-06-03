@@ -51,9 +51,6 @@
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SceneObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -99,9 +96,6 @@
     <ClInclude Include="Command.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="StructsEnums.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CollisionManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -115,6 +109,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DebugManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StructsEnums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -144,9 +141,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">

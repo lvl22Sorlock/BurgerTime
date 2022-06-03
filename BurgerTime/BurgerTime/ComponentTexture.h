@@ -26,6 +26,8 @@ public:
 	ComponentTexture& operator=(ComponentTexture&& other)	noexcept = delete;
 
 private:
+	virtual std::size_t GetTypeHash() override;
+
 	std::shared_ptr<dae::Texture2D> m_Texture{};
 	bool m_IsUsingWidthHeight;
 	Vector2<float> m_WidthHeight;

@@ -8,10 +8,6 @@ class ComponentBase;
 
 #include <typeinfo>
 #include "StructsEnums.h"
-//namespace std
-//{
-//	class type_info;
-//}
 
 namespace dae
 {
