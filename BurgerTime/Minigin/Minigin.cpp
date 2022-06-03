@@ -19,22 +19,6 @@
 #include "ServiceLocator.h"
 #include "SoundSystemSDL.h"
 
-#pragma region COMPONENTS
-#include "ComponentBase.h"
-#include "ComponentText.h"
-#include "ComponentTimer.h"
-#include "FPSCounterBehaviour.h"
-#include "ComponentTexture.h"
-#include "ComponentHealth.h"
-#include "ComponentHealthDisplay.h"
-#include "ComponentScoreManager.h"
-#include "ComponentScoreDisplay.h"
-#include "ComponentCharacterController.h"
-#include "ComponentSpriteRenderer.h"
-#include "ComponentLadder.h"
-#include "ComponentFollowOther.h"
-#pragma endregion
-
 
 
 // Additional includes
@@ -95,8 +79,6 @@ void dae::Minigin::Initialize()
 	}
 
 	Renderer::GetInstance().Init(m_Window);
-
-	m_pLoadGameCallbackFunction = nullptr;
 }
 
 /**

@@ -21,5 +21,85 @@
     <ClCompile Include="BurgerTime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCharacterController.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentFollowOther.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentHealth.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentHealthDisplay.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentLadder.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentScoreDisplay.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentScoreManager.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentSpriteRenderer.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentText.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTexture.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTimer.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSCounterBehaviour.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BurgerTimePCH.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCharacterController.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentFollowOther.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentHealth.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentHealthDisplay.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentLadder.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentScoreDisplay.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentScoreManager.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentSpriteRenderer.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentText.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTexture.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTimer.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSCounterBehaviour.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

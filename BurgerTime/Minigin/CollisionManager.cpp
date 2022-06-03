@@ -5,8 +5,10 @@
 #include "MiniginPCH.h"
 #include "CollisionManager.h"
 
-#include "ComponentLadder.h"
-#include "ComponentCharacterController.h"
+#include "ComponentBase.h"
+
+//#include "ComponentLadder.h"
+//#include "ComponentCharacterController.h"
 
 //-------------------------------------------------------------------------
 //	Static datamembers

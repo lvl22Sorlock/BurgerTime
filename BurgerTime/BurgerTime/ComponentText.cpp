@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include "BurgerTimePCH.h"
 #include "ComponentText.h"
 
 #include <SDL_ttf.h>

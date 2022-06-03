@@ -2,7 +2,7 @@
 //	Includes
 //-------------------------------------------------------------------------
 
-#include "MiniginPCH.h"
+#include "BurgerTimePCH.h"
 #include "ComponentFollowOther.h"
 #include "GameObject.h"
 

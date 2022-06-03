@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include "BurgerTimePCH.h"
 #include "ComponentTimer.h"
 
 ComponentTimer::ComponentTimer(dae::GameObject* pParent)

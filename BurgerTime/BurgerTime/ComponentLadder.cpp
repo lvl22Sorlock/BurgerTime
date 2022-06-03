@@ -2,7 +2,7 @@
 //	Includes
 //-------------------------------------------------------------------------
 
-#include "MiniginPCH.h"
+#include "BurgerTimePCH.h"
 #include "ComponentLadder.h"
 #include "GameObject.h"
 #include "CollisionManager.h"
