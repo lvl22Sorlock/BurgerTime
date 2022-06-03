@@ -141,10 +141,11 @@ void dae::GameObject::RemoveChild(GameObject* pChild)
 	pChild->SetParent(nullptr);
 }
 
-void dae::GameObject::AddChild(GameObject* pChild)
+GameObject* dae::GameObject::AddChild(GameObject* pChild)
 {
 	m_ChildrenPtrs.insert(pChild);
 	pChild->SetParent(this);
+	return pChild;
 }
 
 void GameObject::AddComponent(ComponentBase* pComponent)

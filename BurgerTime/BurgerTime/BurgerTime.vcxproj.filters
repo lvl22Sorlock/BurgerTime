@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -16,10 +12,17 @@
     <Filter Include="Components">
       <UniqueIdentifier>{948eb533-5385-4524-8bf2-7cb6391360bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{c29bb5e1-2d51-45e7-908a-5d5418afc037}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BurgerTime.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Main Files</Filter>
     </ClCompile>
     <ClCompile Include="ComponentCharacterController.cpp">
       <Filter>Components</Filter>
@@ -59,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="BurgerTimeGlobal.cpp">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +108,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FPSCounterBehaviour.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

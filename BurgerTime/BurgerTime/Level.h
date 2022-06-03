@@ -2,43 +2,44 @@
 //-------------------------------------------------------------------------
 //	Include Files
 //-------------------------------------------------------------------------
-#include "Singleton.h"
-//class SoundSystem;
-#include "SoundSystem.h"
-
-using namespace dae;
+#include "ComponentBase.h"
+namespace dae
+{
+	class Scene;
+}
 
 //-------------------------------------------------------------------------
-//	ServiceLocator Class
+//	Level Class
 //-------------------------------------------------------------------------
-class ServiceLocator final : public Singleton<ServiceLocator>
+class Level final : public ComponentBase
 {
 public:
+	Level(dae::GameObject* pParent);
+	~Level() = default;
+
 	//-------------------------------------------------------------------------
 	//	Copy/move constructors and assignment operators
 	//-------------------------------------------------------------------------
 
-	ServiceLocator(const ServiceLocator& other) = delete;
-	ServiceLocator(ServiceLocator&& other) noexcept = delete;
-	ServiceLocator& operator=(const ServiceLocator& other) = delete;
-	ServiceLocator& operator=(ServiceLocator&& other)	noexcept = delete;
+	Level(const Level& other) = delete;
+	Level(Level&& other) noexcept = delete;
+	Level& operator=(const Level& other) = delete;
+	Level& operator=(Level&& other)	noexcept = delete;
 
 	//-------------------------------------------------------------------------
 	//	Member Functions
 	//-------------------------------------------------------------------------
 
-	SoundSystem& GetSoundSystem();
-	void RegisterSoundSystem(SoundSystem* pSoundSystem);
+	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
+
+	void MakeLadder(const Vector2<int>& topIdcs, int bottomIdx, dae::Scene& scene);
 
 private:
-	friend class Singleton<ServiceLocator>;
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-	ServiceLocator();
-	~ServiceLocator();
-	SoundSystem* m_pSoundSystem;
+	virtual std::size_t GetTypeHash() override;
 
 	//-------------------------------------------------------------------------
 	//	Data Members

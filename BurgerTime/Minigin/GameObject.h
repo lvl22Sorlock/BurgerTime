@@ -69,7 +69,7 @@ namespace dae
 		//GameObject* GetChildAtIdx(int index) const;
 			//void RemoveChild(int index);
 		void RemoveChild(GameObject* pChild);
-		void AddChild(GameObject* pChild);
+		GameObject* AddChild(GameObject* pChild);
 		std::unordered_set<GameObject*> GetChildrenPointers() const;
 
 		void SetPosition(float x, float y);

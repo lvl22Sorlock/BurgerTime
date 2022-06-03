@@ -10,6 +10,7 @@ namespace SimonGlobalFunctions
 {
 	Vector2<int> GetClosestIdxFromPos(const Vector2<float>& pos);
 	Vector2<float> GetLeftBottomCornerPosIdx(const Vector2<int>& idx);
+	Vector2<float> GetPosFromIdx(const Vector2<int>& idx);
 }
 
 namespace SimonGlobalEnums

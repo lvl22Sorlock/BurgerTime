@@ -2,43 +2,42 @@
 //-------------------------------------------------------------------------
 //	Include Files
 //-------------------------------------------------------------------------
-#include "Singleton.h"
-//class SoundSystem;
-#include "SoundSystem.h"
 
-using namespace dae;
 
 //-------------------------------------------------------------------------
-//	ServiceLocator Class
+//	KeyboardInput Class
 //-------------------------------------------------------------------------
-class ServiceLocator final : public Singleton<ServiceLocator>
+class KeyboardInput final 
 {
 public:
+	KeyboardInput();
+	~KeyboardInput();
+
 	//-------------------------------------------------------------------------
 	//	Copy/move constructors and assignment operators
 	//-------------------------------------------------------------------------
 
-	ServiceLocator(const ServiceLocator& other) = delete;
-	ServiceLocator(ServiceLocator&& other) noexcept = delete;
-	ServiceLocator& operator=(const ServiceLocator& other) = delete;
-	ServiceLocator& operator=(ServiceLocator&& other)	noexcept = delete;
+	KeyboardInput(const KeyboardInput& other) = delete;
+	KeyboardInput(KeyboardInput&& other) noexcept = delete;
+	KeyboardInput& operator=(const KeyboardInput& other) = delete;
+	KeyboardInput& operator=(KeyboardInput&& other)	noexcept = delete;
 
 	//-------------------------------------------------------------------------
 	//	Member Functions
 	//-------------------------------------------------------------------------
 
-	SoundSystem& GetSoundSystem();
-	void RegisterSoundSystem(SoundSystem* pSoundSystem);
+	void Update();
+	bool IsUp(char button) const;
+	bool IsDown(char button) const;
+	bool IsPressed(char button) const;
+	bool IsReleased(char button) const;
 
 private:
-	friend class Singleton<ServiceLocator>;
+	class KeyboardInputImpl;
+	KeyboardInputImpl* m_pImpl;
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
-
-	ServiceLocator();
-	~ServiceLocator();
-	SoundSystem* m_pSoundSystem;
 
 	//-------------------------------------------------------------------------
 	//	Data Members

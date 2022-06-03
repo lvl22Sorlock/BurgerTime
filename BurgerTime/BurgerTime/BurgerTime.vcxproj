@@ -185,6 +185,7 @@
     <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="ComponentTimer.cpp" />
     <ClCompile Include="FPSCounterBehaviour.cpp" />
+    <ClCompile Include="Level.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimePCH.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="ComponentTimer.h" />
     <ClInclude Include="FPSCounterBehaviour.h" />
     <ClInclude Include="BurgerTimeGlobal.h" />
+    <ClInclude Include="Level.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

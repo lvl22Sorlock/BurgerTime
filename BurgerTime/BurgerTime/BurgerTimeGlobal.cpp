@@ -15,4 +15,8 @@ namespace SimonGlobalFunctions
 	{
 		return { idx.x * SimonGlobalConstants::CELL_WIDTH, idx.y * SimonGlobalConstants::CELL_WIDTH };
 	}
+	Vector2<float> GetPosFromIdx(const Vector2<int>& idx)
+	{
+		return GetLeftBottomCornerPosIdx(idx);
+	}
 }

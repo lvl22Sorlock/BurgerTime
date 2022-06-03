@@ -27,15 +27,15 @@ std::size_t ComponentLadder::GetTypeHash()
 ComponentLadder::ComponentLadder(dae::GameObject* pParent, const CollisionBox& collisionBox, bool canClimbUp, bool canClimbDown)
 	:ComponentBase(pParent)
 	,m_CollisionBox{collisionBox}
-	,m_CanClimbUp{canClimbUp}
-	,m_CanClimbDown{canClimbDown}
+	//,m_CanClimbUp{canClimbUp}
+	//,m_CanClimbDown{canClimbDown}
 {
 	//CollisionManager::GetInstance().AddLadder(this);
-	if (m_CanClimbUp && m_CanClimbDown)
+	if (canClimbUp && canClimbDown)
 		CollisionManager::GetInstance().AddCollidingObject(static_cast<int32_t>(CollisionTag::ladder), this);
-	else if (m_CanClimbUp)
+	else if (canClimbUp)
 		CollisionManager::GetInstance().AddCollidingObject(static_cast<int32_t>(CollisionTag::ladderUpward), this);
-	else if (m_CanClimbDown)
+	else if (canClimbDown)
 		CollisionManager::GetInstance().AddCollidingObject(static_cast<int32_t>(CollisionTag::ladderDownward), this);
 }
 //-------------------------------------------------------------------------
@@ -44,30 +44,25 @@ ComponentLadder::ComponentLadder(dae::GameObject* pParent, const CollisionBox& c
 
 void ComponentLadder::Render() const
 {
-	DebugManager::GetInstance().RenderDebugSquare(m_pParentGameObject->GetPosition(), m_CollisionBox.GetWidthHeight());
+	DebugManager::GetInstance().RenderDebugSquare(m_CollisionBox.leftBottom, m_CollisionBox.GetWidthHeight());
 }
 
-const CollisionBox& ComponentLadder::GetCollisionBox() const
-{
-	return m_CollisionBox;
-}
-
-//float ComponentLadder::GetXPos() const
+//const CollisionBox& ComponentLadder::GetCollisionBox() const
 //{
-//	return m_pParentGameObject->GetPosition().x;
+//	return m_CollisionBox;
 //}
 
-Vector2<float> ComponentLadder::GetPos() const
-{
-	return m_pParentGameObject->GetPosition();
-}
+//Vector2<float> ComponentLadder::GetPos() const
+//{
+//	return m_pParentGameObject->GetPosition();
+//}
 
-bool ComponentLadder::GetGoesUp() const
-{
-	return m_CanClimbUp;
-}
-
-bool ComponentLadder::GetGoesDown() const
-{
-	return m_CanClimbDown;
-}
+//bool ComponentLadder::GetGoesUp() const
+//{
+//	return m_CanClimbUp;
+//}
+//
+//bool ComponentLadder::GetGoesDown() const
+//{
+//	return m_CanClimbDown;
+//}

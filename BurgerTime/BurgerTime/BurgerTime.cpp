@@ -48,6 +48,7 @@ int main(int, char* [])
 #include "ComponentLadder.h"
 #include "ComponentFollowOther.h"
 #include "FPSCounterBehaviour.h"
+#include "Level.h"
 #pragma endregion
 
 #include "BurgerTimeGlobal.h"
@@ -100,6 +101,11 @@ void LoadGame(void)
 #pragma endregion
 	
 #pragma region Ladders
+	auto pLevel{ std::make_shared<GameObject>() };
+	scene.Add(pLevel);
+	auto pLevelComponent{ pLevel->GetAddComponent<Level>(new Level(pLevel.get())) };
+	pLevelComponent->MakeLadder({ 5, 10 }, 0, scene);
+
 	// a ladder
 	//====	Top Ladder	====//
 	auto pTestLadder{ std::make_shared<GameObject>() };

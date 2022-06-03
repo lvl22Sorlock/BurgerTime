@@ -78,7 +78,7 @@ private:
 	bool m_IsOnLadder;
 	bool m_IsOnUpwardLadder;
 	bool m_IsOnDownwardLadder;
-	Vector2<float> m_LadderPos;
+	float m_LadderXPos;
 
 	// Animation
 	bool* m_pIsMovingAnimation;

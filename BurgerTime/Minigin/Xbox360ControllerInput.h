@@ -2,43 +2,44 @@
 //-------------------------------------------------------------------------
 //	Include Files
 //-------------------------------------------------------------------------
-#include "Singleton.h"
-//class SoundSystem;
-#include "SoundSystem.h"
-
-using namespace dae;
+#include "StructsEnums.h"
 
 //-------------------------------------------------------------------------
-//	ServiceLocator Class
+//	Xbox360ControllerInput Class
 //-------------------------------------------------------------------------
-class ServiceLocator final : public Singleton<ServiceLocator>
+class Xbox360ControllerInput final
 {
-public:
+public:	
+	Xbox360ControllerInput(DWORD userIdx);
+	~Xbox360ControllerInput();
+
 	//-------------------------------------------------------------------------
 	//	Copy/move constructors and assignment operators
 	//-------------------------------------------------------------------------
 
-	ServiceLocator(const ServiceLocator& other) = delete;
-	ServiceLocator(ServiceLocator&& other) noexcept = delete;
-	ServiceLocator& operator=(const ServiceLocator& other) = delete;
-	ServiceLocator& operator=(ServiceLocator&& other)	noexcept = delete;
+	Xbox360ControllerInput(const Xbox360ControllerInput& other) = delete;
+	Xbox360ControllerInput(Xbox360ControllerInput&& other) noexcept = delete;
+	Xbox360ControllerInput& operator=(const Xbox360ControllerInput& other) = delete;
+	Xbox360ControllerInput& operator=(Xbox360ControllerInput&& other)	noexcept = delete;
 
 	//-------------------------------------------------------------------------
 	//	Member Functions
 	//-------------------------------------------------------------------------
 
-	SoundSystem& GetSoundSystem();
-	void RegisterSoundSystem(SoundSystem* pSoundSystem);
+	bool Update();
+	bool IsUp(inputEnums::ControllerButton button) const;
+	bool IsDown(inputEnums::ControllerButton button) const;
+	bool IsPressed(inputEnums::ControllerButton button) const;
+	bool IsReleased(inputEnums::ControllerButton button) const;
+	bool IsJoystick(inputEnums::ControllerJoystickDirection joystickDirection) const;
+	Vector2<float> GetJoystick(inputEnums::ControllerJoystick joystick) const;
 
 private:
-	friend class Singleton<ServiceLocator>;
+	class Xbox360ControllerInputImpl;
+	Xbox360ControllerInputImpl* m_pImpl;
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
-
-	ServiceLocator();
-	~ServiceLocator();
-	SoundSystem* m_pSoundSystem;
 
 	//-------------------------------------------------------------------------
 	//	Data Members

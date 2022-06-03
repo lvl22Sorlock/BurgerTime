@@ -12,16 +12,17 @@ class Command;
 //
 
 #include "Singleton.h"
+class KeyboardInput;
+class Xbox360ControllerInput;
+namespace inputEnums
+{
+	enum class ControllerButton;
+	enum class ControllerJoystickDirection;
+	enum class ControllerJoystick;
+}
 
 namespace dae
 {
-	enum class ControllerButton
-	{
-		ButtonA,
-		ButtonB,
-		ButtonX,
-		ButtonY
-	};
 	enum class InputType
 	{
 		IsPressed,
@@ -32,8 +33,8 @@ namespace dae
 	struct IsInputKeyboard
 	{
 		IsInputKeyboard(char keyParam, InputType inputTypeParam)
-			:key{keyParam}
-			,inputType{inputTypeParam}
+			: key{keyParam}
+			, inputType{inputTypeParam}
 		{}
 
 		char key{};
@@ -46,6 +47,23 @@ namespace dae
 				(inputType == other.inputType);
 		}
 	};
+	struct IsInputController
+	{
+		IsInputController(inputEnums::ControllerButton buttonParam, InputType inputTypeParam)
+			: button{ buttonParam }
+			, inputType{ inputTypeParam }
+		{}
+
+		inputEnums::ControllerButton button{};
+		InputType inputType{ InputType::IsPressed };
+
+		inline bool operator==(const IsInputController& other) const
+		{
+			return (button == other.button)
+				&&
+				(inputType == other.inputType);
+		}
+	};
 	// https://www.techiedelight.com/use-struct-key-std-unordered_map-cpp/
 	struct HashIsInputKeyboard
 	{
@@ -54,54 +72,43 @@ namespace dae
 			return std::hash<char>()(key.key) ^ std::hash<int>()(static_cast<int>(key.inputType));
 		}
 	};
+	struct HashIsInputController
+	{
+		std::size_t operator()(const IsInputController& key) const
+		{
+			return std::hash<int>()(static_cast<int>(key.button)) ^ std::hash<int>()(static_cast<int>(key.inputType));
+		}
+	};
 
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
-		InputManager();
-		~InputManager();	// inputManager owns the commands
-
 		void HandleInput();
 		bool ProcessInput();		
 		
 		void AddCommandToCommandList(Command* pNewCommand);
-		bool AddCommandToButton(ControllerButton button, Command* pNewCommand);
+		bool AddCommandToButton(inputEnums::ControllerButton button, InputType inputType, Command* pNewCommand, int playerNr);
+		bool AddCommandToJoystickDirection(inputEnums::ControllerJoystickDirection joystickDirection, Command* pNewCommand, int playerNr);
 		bool AddCommandToButton(char button, InputType inputType, Command* pNewCommand);
 	private:
+		friend class Singleton<InputManager>;
+		InputManager();
+		~InputManager();	// inputManager owns the commands
+
 		// Controller
-		bool IsButtonUp(ControllerButton button) const;
-		bool IsButtonDown(ControllerButton button) const;
-		bool WasButtonUp(ControllerButton button) const;
-		bool WasButtonDown(ControllerButton button) const;
-		bool IsButtonPressed(ControllerButton button) const;
-		bool IsButtonReleased(ControllerButton button) const;
+		std::unique_ptr<Xbox360ControllerInput> m_pXbox360ControllerInputU1;
+		std::unique_ptr<Xbox360ControllerInput> m_pXbox360ControllerInputU2;
 		// Keyboard
-		char GetKeyChar(int scanCode) const;
+		std::unique_ptr<KeyboardInput> m_pKeyboardInput;
 		char GetCapitalChar(char possiblyCapitalChar) const;
-		bool IsButtonUp(char button) const;
-		bool IsButtonDown(char button) const;
-		bool IsButtonPressed(char button) const;
-		bool IsButtonReleased(char button) const;
-
-		void InitializeMaps();
-		bool AddButtonToValue(unsigned int value, ControllerButton button);
-
-		XINPUT_STATE m_CurrentInputState{};		
-		XINPUT_STATE m_PreviousInputState;
-		std::unordered_map<char, bool> m_SDLReleasedKeys;
-		std::unordered_map<char, bool> m_SDLPressedKeys;
-		std::unordered_map<char, bool> m_SDLDownKeys;
-
-		BYTE m_ByteMaxValue;
-		SHORT m_ShortMaxValue;
-		float m_ValuePercentageToIgnore;
 
 		std::vector<Command*> m_CommandPtrs;
-		std::unordered_map<unsigned int, ControllerButton> m_ControllerButtonValues;
-		std::unordered_map<ControllerButton, Command*> m_ControllerCommandButtons;
+		std::unordered_map<IsInputController, Command*, HashIsInputController> m_ControllerCommandButtonsU1;
+		std::unordered_map<IsInputController, Command*, HashIsInputController> m_ControllerCommandButtonsU2;
+		std::unordered_map<inputEnums::ControllerJoystickDirection, Command*> m_ControllerCommandJoystickDirectionsU1;
+		std::unordered_map<inputEnums::ControllerJoystickDirection, Command*> m_ControllerCommandJoystickDirectionsU2;
 		std::unordered_map<IsInputKeyboard, Command*, HashIsInputKeyboard> m_KeyboardCommandButtons;
 	};
-
 }
 
 

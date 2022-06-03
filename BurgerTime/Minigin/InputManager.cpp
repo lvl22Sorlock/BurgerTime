@@ -11,13 +11,21 @@
 
 using namespace dae;
 
+#include "KeyboardInput.h"
+#include "Xbox360ControllerInput.h"
+#include "StructsEnums.h"
+using namespace inputEnums;
+
 InputManager::InputManager()
-	:m_CurrentInputState{}
-	,m_PreviousInputState{}
-{
-	m_SDLPressedKeys.reserve(50);
-	m_SDLReleasedKeys.reserve(50);
-}
+	: m_pKeyboardInput{std::make_unique<KeyboardInput>()}
+	, m_pXbox360ControllerInputU1{ std::make_unique<Xbox360ControllerInput>(1) }
+	, m_pXbox360ControllerInputU2{ std::make_unique<Xbox360ControllerInput>(2) }
+	, m_ControllerCommandButtonsU1{}
+	, m_ControllerCommandButtonsU2{}
+	, m_ControllerCommandJoystickDirectionsU1{}
+	, m_ControllerCommandJoystickDirectionsU2{}
+	, m_KeyboardCommandButtons{}
+{}
 
 InputManager::~InputManager()
 {
@@ -30,71 +38,75 @@ InputManager::~InputManager()
 
 bool dae::InputManager::ProcessInput()
 {
-	m_PreviousInputState = m_CurrentInputState;
-	ZeroMemory(&m_CurrentInputState, sizeof(XINPUT_STATE));
-	DWORD dwResult{ XInputGetState(0, &m_CurrentInputState) };
-	if (dwResult == ERROR_SUCCESS) // if succesfull
-	{
-	}
-	else // on fail
-	{
-		m_CurrentInputState = {};
-		//return false;
-	}
-		SDL_Event e;
-		for (std::pair<const char, bool>& isKeyPressed : m_SDLPressedKeys)
-		{
-			isKeyPressed.second = false;
-		}
-		for (std::pair<const char, bool>& isKeyReleased : m_SDLReleasedKeys)
-		{
-			isKeyReleased.second = false;
-		}
-
-		while (SDL_PollEvent(&e))
-		{
-			switch (e.type)
-			{
-			case SDL_QUIT:
-				return false;
-				//break;
-			case SDL_KEYDOWN:
-				m_SDLPressedKeys[GetKeyChar(static_cast<int>(e.key.keysym.scancode))] = true;
-				m_SDLDownKeys	[GetKeyChar(static_cast<int>(e.key.keysym.scancode))] = true;
-				break;
-			case SDL_KEYUP:
-				m_SDLReleasedKeys[GetKeyChar(static_cast<int>(e.key.keysym.scancode))] = true;
-				m_SDLDownKeys	 [GetKeyChar(static_cast<int>(e.key.keysym.scancode))] = false;
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				break;
-			}
-	
-			//process event for IMGUI
-			ImGui_ImplSDL2_ProcessEvent(&e);
-		}
+	m_pKeyboardInput->Update();
+	m_pXbox360ControllerInputU1->Update();
+	m_pXbox360ControllerInputU2->Update();
 	return true;
-}
-
-void InputManager::InitializeMaps()	// to actually use this there should be public functions to do this
-{
-	m_ControllerButtonValues[XINPUT_GAMEPAD_A] = ControllerButton::ButtonA;
-	m_ControllerButtonValues[XINPUT_GAMEPAD_B] = ControllerButton::ButtonB;
-	m_ControllerButtonValues[XINPUT_GAMEPAD_X] = ControllerButton::ButtonX;
-	m_ControllerButtonValues[XINPUT_GAMEPAD_Y] = ControllerButton::ButtonY;
 }
 
 void InputManager::HandleInput()
 {
 	// Check Controller Input
-	for (const std::pair<unsigned int, ControllerButton>& mapElement : m_ControllerButtonValues)
+	for (const std::pair<IsInputController, Command*>& buttonCommandPair : m_ControllerCommandButtonsU1)
 	{
-		if (IsButtonPressed(mapElement.second))
+		switch (buttonCommandPair.first.inputType)
 		{
-			if (m_ControllerCommandButtons.find(mapElement.second) != m_ControllerCommandButtons.end())
-			{
-				m_ControllerCommandButtons[mapElement.second]->Execute();
-			}
+		case InputType::IsDown:
+			if (m_pXbox360ControllerInputU1->IsDown(buttonCommandPair.first.button))
+				buttonCommandPair.second->Execute();
+			break;
+		case InputType::IsUp:
+			if (m_pXbox360ControllerInputU1->IsUp(buttonCommandPair.first.button))
+				buttonCommandPair.second->Execute();
+			break;
+		case InputType::IsPressed:
+			if (m_pXbox360ControllerInputU1->IsPressed(buttonCommandPair.first.button))
+				buttonCommandPair.second->Execute();
+			break;
+		case InputType::IsReleased:
+			if (m_pXbox360ControllerInputU1->IsReleased(buttonCommandPair.first.button))
+				buttonCommandPair.second->Execute();
+			break;
+		default:
+			break;
+		}
+	}
+	for (const std::pair<IsInputController, Command*>& buttonCommandPair : m_ControllerCommandButtonsU2)
+	{
+		switch (buttonCommandPair.first.inputType)
+		{
+		case InputType::IsDown:
+			if (m_pXbox360ControllerInputU2->IsDown(buttonCommandPair.first.button))
+				buttonCommandPair.second->Execute();
+			break;
+		case InputType::IsUp:
+			if (m_pXbox360ControllerInputU2->IsUp(buttonCommandPair.first.button))
+				buttonCommandPair.second->Execute();
+			break;
+		case InputType::IsPressed:
+			if (m_pXbox360ControllerInputU2->IsPressed(buttonCommandPair.first.button))
+				buttonCommandPair.second->Execute();
+			break;
+		case InputType::IsReleased:
+			if (m_pXbox360ControllerInputU2->IsReleased(buttonCommandPair.first.button))
+				buttonCommandPair.second->Execute();
+			break;
+		default:
+			break;
+		}
+	}
+	for (const std::pair<ControllerJoystickDirection, Command*>& joystickDirectionCommandPair : m_ControllerCommandJoystickDirectionsU1)
+	{
+		if (m_pXbox360ControllerInputU1->IsJoystick(joystickDirectionCommandPair.first))
+		{
+			joystickDirectionCommandPair.second->Execute();
+		}
+	}
+	for (const std::pair<ControllerJoystickDirection, Command*>& joystickDirectionCommandPair : m_ControllerCommandJoystickDirectionsU2)
+	{
+		if (m_pXbox360ControllerInputU2->IsJoystick(joystickDirectionCommandPair.first))
+		{
+			joystickDirectionCommandPair.second->Execute();
 		}
 	}
 
@@ -104,19 +116,19 @@ void InputManager::HandleInput()
 		switch (mapElement.first.inputType)
 		{
 		case InputType::IsDown:
-			if (IsButtonDown(mapElement.first.key))
+			if (m_pKeyboardInput->IsDown(mapElement.first.key))
 				mapElement.second->Execute();
 			break;
 		case InputType::IsUp:
-			if (IsButtonUp(mapElement.first.key))
+			if (m_pKeyboardInput->IsUp(mapElement.first.key))
 				mapElement.second->Execute();
 			break;
 		case InputType::IsPressed:
-			if (IsButtonPressed(mapElement.first.key))
+			if (m_pKeyboardInput->IsPressed(mapElement.first.key))
 				mapElement.second->Execute();
 			break;
 		case InputType::IsReleased:
-			if (IsButtonReleased(mapElement.first.key))
+			if (m_pKeyboardInput->IsReleased(mapElement.first.key))
 				mapElement.second->Execute();
 			break;
 		default:
@@ -125,100 +137,39 @@ void InputManager::HandleInput()
 	}
 }
 
-bool InputManager::IsButtonUp(ControllerButton button) const
+bool InputManager::AddCommandToButton(ControllerButton button, InputType inputType, Command* pNewCommand, int playerNr)
 {
-	const XINPUT_GAMEPAD gamePadState = m_CurrentInputState.Gamepad;
-	const unsigned int buttonValue = static_cast<unsigned>(gamePadState.wButtons);
+	if (playerNr != 1 && playerNr != 2) {
+		std::cout << "Invalid playerNr for controller input: " << playerNr << std::endl;
+		return false;
+	}
+	IsInputController isInputController{ button, inputType };
 
-	// if inputmanager doesn't know what this button is
-	if (m_ControllerButtonValues.find(buttonValue) == m_ControllerButtonValues.end()) return false;
+	auto* pControllerButtonCommandMap{ &m_ControllerCommandButtonsU1};
+	if (playerNr == 2)
+		pControllerButtonCommandMap = &m_ControllerCommandButtonsU2;
 
-	// if a button has been pressed and that is the button that we are checking for, return true
-	ControllerButton pressedButton = m_ControllerButtonValues.at(buttonValue);
-	if (pressedButton == button)
-		return true;
-
-	return false;
-}
-
-bool InputManager::IsButtonDown(ControllerButton button) const
-{
-	// because down = !up
-	// a normal button can't be half-down, it's either up or down
-	return !IsButtonUp(button);
-}
-
-bool InputManager::WasButtonUp(ControllerButton button) const
-{
-	const XINPUT_GAMEPAD gamePadState = m_PreviousInputState.Gamepad;
-	const unsigned int buttonValue = static_cast<unsigned>(gamePadState.wButtons);
-
-	// if inputmanager doesn't know what this button is
-	if (m_ControllerButtonValues.find(buttonValue) == m_ControllerButtonValues.end()) return false;
-
-	// if a button has been pressed and that is the button that we are checking for, return true
-	ControllerButton pressedButton = m_ControllerButtonValues.at(buttonValue);
-	if (pressedButton == button)
-		return true;
-
-	return false;
-}
-
-bool InputManager::WasButtonDown(ControllerButton button) const
-{
-	return !WasButtonUp(button);
-}
-
-bool InputManager::IsButtonPressed(ControllerButton button) const
-{
-	return IsButtonDown(button) && WasButtonUp(button);
-}
-
-bool InputManager::IsButtonReleased(ControllerButton button) const
-{
-	return IsButtonUp(button) && WasButtonDown(button);
-}
-
-bool InputManager::IsButtonUp(char button) const
-{
-	char capitalButton{ GetCapitalChar(button) };
-	auto buttonIterator{ m_SDLDownKeys.find(capitalButton) };
-	return (buttonIterator == m_SDLDownKeys.end()
-			||
-			(*buttonIterator).second == false);
-}
-
-bool InputManager::IsButtonDown(char button) const
-{
-	char capitalButton{ GetCapitalChar(button) };
-	auto buttonIterator{ m_SDLDownKeys.find(capitalButton) };
-	if (buttonIterator == m_SDLDownKeys.end()) return false;
-	return (*buttonIterator).second;
-}
-
-bool InputManager::IsButtonPressed(char button) const
-{
-	char capitalButton{ GetCapitalChar(button) };
-	auto buttonIterator{ m_SDLPressedKeys.find(capitalButton) };
-	if (buttonIterator == m_SDLPressedKeys.end()) return false;
-	return (*buttonIterator).second;
-}
-
-bool InputManager::IsButtonReleased(char button) const
-{
-	char capitalButton{ GetCapitalChar(button) };
-	auto buttonIterator{ m_SDLReleasedKeys.find(capitalButton) };
-	if (buttonIterator == m_SDLReleasedKeys.end()) return false;
-	return (*buttonIterator).second;
-}
-
-
-bool InputManager::AddCommandToButton(ControllerButton button, Command* pNewCommand)
-{
-	if (m_ControllerCommandButtons.contains(button))
+	if (pControllerButtonCommandMap->contains(isInputController))
 		return false;
 
-	m_ControllerCommandButtons[button] = pNewCommand;
+	(*pControllerButtonCommandMap)[isInputController] = pNewCommand;
+	return true;
+}
+
+bool InputManager::AddCommandToJoystickDirection(inputEnums::ControllerJoystickDirection joystickDirection, Command* pNewCommand, int playerNr)
+{
+	if (playerNr != 1 && playerNr != 2) {
+		std::cout << "Invalid playerNr for controller input: " << playerNr << std::endl;
+		return false;
+	}
+	auto* pControllerButtonCommandMap{ &m_ControllerCommandJoystickDirectionsU1 };
+	if (playerNr == 2)
+		pControllerButtonCommandMap = &m_ControllerCommandJoystickDirectionsU2;
+
+	if (pControllerButtonCommandMap->contains(joystickDirection))
+		return false;
+
+	(*pControllerButtonCommandMap)[joystickDirection] = pNewCommand;
 	return true;
 }
 
@@ -232,25 +183,9 @@ bool InputManager::AddCommandToButton(char button, InputType inputType, Command*
 	return true;
 }
 
-bool InputManager::AddButtonToValue(unsigned int value, ControllerButton button)
-{
-	if (m_ControllerButtonValues.contains(value))
-		return false;
-
-	m_ControllerButtonValues[value] = button;
-	return true;
-}
-
 void InputManager::AddCommandToCommandList(Command* pNewCommand)
 {
 	m_CommandPtrs.emplace_back(pNewCommand);
-}
-
-char InputManager::GetKeyChar(int scanCode) const
-{
-	const int NR_A_SDL{		4/*static_cast<int>(SDL_SCANCODE_A)*/ };
-	const int NR_A_CHAR{	static_cast<int>('A')};
-	return static_cast<char>(scanCode + (NR_A_CHAR - NR_A_SDL));
 }
 
 char InputManager::GetCapitalChar(char possiblyCapitalChar) const

@@ -15,6 +15,9 @@ using namespace SimonGlobalConstants;
 using namespace SimonGlobalEnums;
 using namespace SimonGlobalFunctions;
 
+#include "StructsEnums.h"
+using namespace inputEnums;
+
 
 //-------------------------------------------------------------------------
 //	Static datamembers
@@ -42,7 +45,7 @@ ComponentCharacterController::ComponentCharacterController(dae::GameObject* pPar
 	, m_IsOnLadder{false}
 	, m_IsOnUpwardLadder{false}
 	, m_IsOnDownwardLadder{false}
-	, m_LadderPos{0,0}
+	, m_LadderXPos{0}
 	, m_WidthHeight{widthHeight}
 	, m_CollisionBox({ pParent->GetPosition().x, pParent->GetPosition().y}, widthHeight.x, widthHeight.y)
 {}
@@ -70,6 +73,8 @@ void ComponentCharacterController::Update(float deltaTime)
 		= CollisionManager::GetInstance().IsCollidingWithObjectOfTag(static_cast<int32_t>(CollisionTag::ladderDownward), m_CollisionBox, &pLadderComponent)
 		|| CollisionManager::GetInstance().IsCollidingWithObjectOfTag(static_cast<int32_t>(CollisionTag::ladder), m_CollisionBox, &pLadderComponent);
 	m_IsOnLadder = m_IsOnUpwardLadder || m_IsOnDownwardLadder;
+	if (pLadderComponent)
+		m_LadderXPos = pLadderComponent->GetParent()->GetPosition().x;
 
 	if (m_IsMoving)
 	{
@@ -115,12 +120,12 @@ void ComponentCharacterController::CalculateMovement(float deltaTime)
 	bool isGoingUp{ m_MoveDirection.y < -SMALL_FLOAT };
 	if (m_IsOnUpwardLadder && isGoingUp)
 	{		// climb ladder
-		m_pParentGameObject->SetPosition(m_LadderPos.x, m_pParentGameObject->GetPosition().y);
+		m_pParentGameObject->SetPosition(m_LadderXPos, m_pParentGameObject->GetPosition().y);
 		m_MoveDirection.x = 0;
 	}	
 	else if (m_IsOnDownwardLadder && isGoingDown)
 	{		// descend ladder
-		m_pParentGameObject->SetPosition(m_LadderPos.x, m_pParentGameObject->GetPosition().y);
+		m_pParentGameObject->SetPosition(m_LadderXPos, m_pParentGameObject->GetPosition().y);
 		m_MoveDirection.x = 0;
 	}
 	else	// walk || leave ladder
@@ -151,6 +156,13 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		Command* pMoveLeftCommand{ new MoveLeftCommand(this) };
 		inputManager.AddCommandToCommandList(pMoveLeftCommand);
 		inputManager.AddCommandToButton(left, InputType::IsDown, pMoveLeftCommand);
+
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftLeft, pMoveLeftCommand, 1);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightLeft, pMoveLeftCommand, 1);
+		inputManager.AddCommandToButton(ControllerButton::DPadLeft, InputType::IsDown, pMoveLeftCommand, 1);
+		inputManager.AddCommandToButton(ControllerButton::DPadLeft, InputType::IsDown, pMoveLeftCommand, 2);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftLeft, pMoveLeftCommand, 2);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightLeft, pMoveLeftCommand, 2);
 	}
 
 	if (right != ' ')
@@ -158,6 +170,13 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		Command* pMoveRightCommand{ new MoveRightCommand(this) };
 		inputManager.AddCommandToCommandList(pMoveRightCommand);
 		inputManager.AddCommandToButton(right, InputType::IsDown, pMoveRightCommand);
+
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftRight, pMoveRightCommand, 1);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightRight, pMoveRightCommand, 1);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftRight, pMoveRightCommand, 2);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightRight, pMoveRightCommand, 2);
+		inputManager.AddCommandToButton(ControllerButton::DPadRight, InputType::IsDown, pMoveRightCommand, 1);
+		inputManager.AddCommandToButton(ControllerButton::DPadRight, InputType::IsDown, pMoveRightCommand, 2);
 	}
 
 	if (up != ' ')
@@ -165,6 +184,13 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		Command* pMoveUpCommand{ new MoveUpCommand(this) };
 		inputManager.AddCommandToCommandList(pMoveUpCommand);
 		inputManager.AddCommandToButton(up, InputType::IsDown, pMoveUpCommand);
+
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftUp, pMoveUpCommand, 1);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightUp, pMoveUpCommand, 1);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftUp, pMoveUpCommand, 2);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightUp, pMoveUpCommand, 2);
+		inputManager.AddCommandToButton(ControllerButton::DPadUp, InputType::IsDown, pMoveUpCommand, 1);
+		inputManager.AddCommandToButton(ControllerButton::DPadUp, InputType::IsDown, pMoveUpCommand, 2);
 	}
 
 	if (down != ' ')
@@ -172,6 +198,13 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		Command* pMoveDownCommand{ new MoveDownCommand(this) };
 		inputManager.AddCommandToCommandList(pMoveDownCommand);
 		inputManager.AddCommandToButton(down, InputType::IsDown, pMoveDownCommand);
+
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftDown, pMoveDownCommand, 1);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightDown, pMoveDownCommand, 1);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftDown, pMoveDownCommand, 2);
+		inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightDown, pMoveDownCommand, 2);
+		inputManager.AddCommandToButton(ControllerButton::DPadDown, InputType::IsDown, pMoveDownCommand, 1);
+		inputManager.AddCommandToButton(ControllerButton::DPadDown, InputType::IsDown, pMoveDownCommand, 2);
 	}
 }
 

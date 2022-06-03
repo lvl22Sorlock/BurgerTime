@@ -123,3 +123,38 @@ struct CollisionBox
 		return true;
 	}
 };
+
+namespace inputEnums
+{
+	enum class ControllerButton
+	{
+		ButtonA,
+		ButtonB,
+		ButtonX,
+		ButtonY,
+		DPadLeft,
+		DPadRight,
+		DPadUp,
+		DPadDown,
+		//LeftThumb,
+		//RightThumb,
+		LeftShoulder,
+		RightShoulder
+	};
+	enum class ControllerJoystickDirection
+	{
+		leftLeft,
+		leftRight,
+		leftUp,
+		leftDown,
+		rightLeft,
+		rightRight,
+		rightUp,
+		rightDown
+	};
+	enum class ControllerJoystick
+	{
+		left,
+		right
+	};
+}
