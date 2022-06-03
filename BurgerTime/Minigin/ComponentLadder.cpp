@@ -22,7 +22,7 @@ ComponentLadder::ComponentLadder(dae::GameObject* pParent, const CollisionBox& c
 	,m_CanClimbUp{canClimbUp}
 	,m_CanClimbDown{canClimbDown}
 {
-	CollisionManager::GetInstance().AddLadder(this);
+	//CollisionManager::GetInstance().AddLadder(this);
 }
 
 ComponentLadder::~ComponentLadder()

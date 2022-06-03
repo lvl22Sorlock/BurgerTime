@@ -7,11 +7,11 @@
 #include <algorithm>
 #include "InputManager.h"
 #include "CollisionManager.h"
-#include "GlobalVariables.h"
+#include "GlobalConstants.h"
 #include "DebugManager.h"
 
 using namespace dae;
-using namespace SimonGlobalVariables;
+using namespace SimonGlobalConstants;
 
 //-------------------------------------------------------------------------
 //	Static datamembers
@@ -56,8 +56,8 @@ void ComponentCharacterController::Update(float deltaTime)
 	CalculateCollisionBox();
 
 	// ladder collision
-	m_IsOnUpwardLadder = CollisionManager::GetInstance().IsCollidingWithUpLadder(m_CollisionBox, m_LadderPos);
-	m_IsOnDownwardLadder = CollisionManager::GetInstance().IsCollidingWithDownLadder(m_CollisionBox, m_LadderPos);
+	//m_IsOnUpwardLadder = CollisionManager::GetInstance().IsCollidingWithUpLadder(m_CollisionBox, m_LadderPos);
+	//m_IsOnDownwardLadder = CollisionManager::GetInstance().IsCollidingWithDownLadder(m_CollisionBox, m_LadderPos);
 	m_IsOnLadder = m_IsOnUpwardLadder || m_IsOnDownwardLadder;
 
 	if (m_IsMoving)

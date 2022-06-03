@@ -14,7 +14,7 @@
 //	Constructor(s) & Destructor
 //-------------------------------------------------------------------------
 DebugManager::DebugManager()
-	:m_IsDebugRendering{true}
+	:m_IsDebugRendering{false}
 	,m_DebugSquareTexture{}
 {
 	m_DebugSquareTexture = dae::ResourceManager::GetInstance().LoadTexture("DebugGreenCollider3.png");
