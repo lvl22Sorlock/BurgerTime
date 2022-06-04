@@ -26,7 +26,7 @@ ComponentSpriteRenderer::ComponentSpriteRenderer(dae::GameObject* pParent, const
 	, m_IsSpriteSheetSet{false}
 	, m_IsActive{true}
 	, m_IsMirrored{true}
-	, m_HAS_ANIMATIONS{hasAnimations}
+	, m_HasAnimations{hasAnimations}
 	, m_PosOffset{posOffset}
 	, m_WidthHeight{widthHeight}
 {
@@ -34,7 +34,7 @@ ComponentSpriteRenderer::ComponentSpriteRenderer(dae::GameObject* pParent, const
 
 void ComponentSpriteRenderer::Update(float deltaTime)
 {
-	if (!m_HAS_ANIMATIONS) return;
+	if (!m_HasAnimations) return;
 	if (!CheckIsValid()) return;
 
 	if (m_IsActive)
@@ -96,6 +96,7 @@ Vector2<int> ComponentSpriteRenderer::GetSpriteSheetPos() const
 
 void ComponentSpriteRenderer::AddAnimation(const std::wstring& animName, const AnimInfo& animInfo)
 {
+	m_HasAnimations = true;
 	m_Animations[animName] = animInfo;
 }
 

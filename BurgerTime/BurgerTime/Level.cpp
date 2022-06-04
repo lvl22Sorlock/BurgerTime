@@ -15,6 +15,8 @@ using namespace SimonGlobalConstants;
 #include "ComponentLadder.h"
 #include "ComponentSpriteRenderer.h"
 #include "Platform.h"
+#include <fstream>
+#include <iostream>
 
 //-------------------------------------------------------------------------
 //	Static datamembers
@@ -29,7 +31,7 @@ std::size_t Level::GetTypeHash(){
 	return typeid(*this).hash_code();
 }
 
-Level::Level(dae::GameObject* pParent)
+Level::Level(GameObject* pParent)
 	:ComponentBase(pParent)
 {}
 //-------------------------------------------------------------------------
@@ -102,11 +104,12 @@ void Level::MakeLadder(const Vector2<int>& topIdcs, int bottomIdx, Scene& scene)
 void Level::MakePlatform(const Vector2<int>& leftIdcx, int rightIdx, dae::Scene& scene)
 {
 	const int NR_PLATFORMS{ rightIdx - leftIdcx.x };
+	const Vector2<float> PLATFORM_SPRITE_OFFSET{ 0,5.0f };
 	for (int idxX{ 0 }; idxX <= NR_PLATFORMS; ++idxX)
 	{
 		auto pPlatform{ std::make_shared<GameObject>() };
 		m_pParentGameObject->AddChild(pPlatform.get());
-		pPlatform->SetPosition(GetPosFromIdx({ idxX + leftIdcx.x, leftIdcx.y }));
+		pPlatform->SetPosition(GetPosFromIdx({ idxX + leftIdcx.x, leftIdcx.y }) + PLATFORM_SPRITE_OFFSET);
 		scene.Add(pPlatform);
 		auto pLadderSpriteRenderer{ new ComponentSpriteRenderer(pPlatform.get(), {CELL_WIDTH,CELL_WIDTH}, false) };
 		pLadderSpriteRenderer->SetSpritesheet("platform.png");
@@ -127,7 +130,7 @@ void Level::MakePlatform(const Vector2<int>& leftIdcx, int rightIdx, dae::Scene&
 	// Invisible left-only platform on the right
 	auto pPlatformLeftOnly{ std::make_shared<GameObject>() };
 	m_pParentGameObject->AddChild(pPlatformLeftOnly.get());
-	pPlatformLeftOnly->SetPosition(GetPosFromIdx({ leftIdcx.x-1, leftIdcx.y }));
+	pPlatformLeftOnly->SetPosition(GetPosFromIdx({ leftIdcx.x-1, leftIdcx.y }) + PLATFORM_SPRITE_OFFSET);
 	scene.Add(pPlatformLeftOnly);
 	CollisionBox platformCollisionBox{ CollisionBox(GetPosFromIdx({leftIdcx.x - 1, leftIdcx.y }), CELL_WIDTH / 3, CELL_WIDTH / 3) };
 	platformCollisionBox.leftBottom.x += (CELL_WIDTH / 3);
@@ -145,7 +148,7 @@ void Level::MakePlatform(const Vector2<int>& leftIdcx, int rightIdx, dae::Scene&
 	// Invisible right-only platform on the left
 	auto pPlatformRightOnly{ std::make_shared<GameObject>() };
 	m_pParentGameObject->AddChild(pPlatformRightOnly.get());
-	pPlatformRightOnly->SetPosition(GetPosFromIdx({ rightIdx + 1, leftIdcx.y }));
+	pPlatformRightOnly->SetPosition(GetPosFromIdx({ rightIdx + 1, leftIdcx.y }) + PLATFORM_SPRITE_OFFSET);
 	scene.Add(pPlatformRightOnly);
 	platformCollisionBox = CollisionBox(GetPosFromIdx({ rightIdx + 1, leftIdcx.y }), CELL_WIDTH / 3, CELL_WIDTH / 3);
 	platformCollisionBox.leftBottom.x += (CELL_WIDTH / 3);
@@ -160,4 +163,129 @@ void Level::MakePlatform(const Vector2<int>& leftIdcx, int rightIdx, dae::Scene&
 			true
 		)
 	);
+}
+
+void Level::ParseFile(const std::string& filePath, dae::Scene& scene)
+{
+	std::ifstream ifs{};
+	ifs.open(filePath);
+	if (ifs.is_open())
+	{
+		while (ifs)
+		{
+			ParseFileBlock(ifs, scene);
+		}
+	}
+	else
+		std::cout << "Level failed to open file with path " << filePath << std::endl;
+}
+
+void Level::ParseFileBlock(std::ifstream& ifs, dae::Scene& scene)
+{
+	char byteArray1Block[4]{};
+	ifs.read(&byteArray1Block[0], 4);
+	BlockId blockId{ static_cast<BlockId>(GetIntFrom4Chars(&byteArray1Block[0]))};
+	Vector2<int> topIdcs{};
+	int bottomIdx{};
+	Vector2<int> leftIdcs{};
+	int rightIdx{};
+	switch (blockId)
+	{
+	case BlockId::ladder:
+		ifs.read(&byteArray1Block[0], 4);
+		topIdcs.x = static_cast<int>(GetIntFrom4Chars(&byteArray1Block[0]));
+		ifs.read(&byteArray1Block[0], 4);
+		topIdcs.y = static_cast<int>(GetIntFrom4Chars(&byteArray1Block[0]));
+		ifs.read(&byteArray1Block[0], 4);
+		bottomIdx = static_cast<int>(GetIntFrom4Chars(&byteArray1Block[0]));
+		MakeLadder(topIdcs, bottomIdx, scene);
+		break;
+	case BlockId::platform:
+		ifs.read(&byteArray1Block[0], 4);
+		leftIdcs.x = static_cast<int>(GetIntFrom4Chars(&byteArray1Block[0]));
+		ifs.read(&byteArray1Block[0], 4);
+		leftIdcs.y = static_cast<int>(GetIntFrom4Chars(&byteArray1Block[0]));
+		ifs.read(&byteArray1Block[0], 4);
+		rightIdx = static_cast<int>(GetIntFrom4Chars(&byteArray1Block[0]));
+		MakePlatform(leftIdcs, rightIdx, scene);
+		break;
+	default:
+		std::cout << "Error while parsing level file when attempting to read blockId" << std::endl;
+		return;
+	}
+}
+
+void Level::MakeLadderFile(const Vector2<int>& topIdcs, int bottomIdx, std::ofstream& ofs)
+{
+	//std::vector<int32_t> valuesArray{};
+	//valuesArray.reserve(4);
+	//valuesArray.emplace_back(static_cast<int32_t>(BlockId::ladder));
+	//valuesArray.emplace_back(topIdcs.x);
+	//valuesArray.emplace_back(topIdcs.y);
+	//valuesArray.emplace_back(bottomIdx);
+	//ofs.write(static_cast<char*>(&valuesArray[0])
+
+	std::vector<char> byteArray{};
+	GetIntToBytes(static_cast<int32_t>(BlockId::ladder), byteArray);
+	GetIntToBytes(static_cast<int32_t>(topIdcs.x), byteArray);
+	GetIntToBytes(static_cast<int32_t>(topIdcs.y), byteArray);
+	GetIntToBytes(static_cast<int32_t>(bottomIdx), byteArray);
+	ofs.write(&byteArray[0], byteArray.size());
+}
+
+void Level::MakePlatformFile(const Vector2<int>& leftIdcx, int rightIdx, std::ofstream& ofs)
+{
+	std::vector<char> byteArray{};
+	GetIntToBytes(static_cast<int32_t>(BlockId::platform), byteArray);
+	GetIntToBytes(static_cast<int32_t>(leftIdcx.x), byteArray);
+	GetIntToBytes(static_cast<int32_t>(leftIdcx.y), byteArray);
+	GetIntToBytes(static_cast<int32_t>(rightIdx), byteArray);
+	ofs.write(&byteArray[0], byteArray.size());
+	/*ofs << static_cast<int>(BlockId::platform);
+	ofs << ' ';
+	ofs << leftIdcx.x;
+	ofs << ' ';
+	ofs << leftIdcx.y;
+	ofs << ' ';
+	ofs << rightIdx;
+	ofs << ' ';*/
+}
+
+std::ofstream Level::GetLevelOutputFileStream(const std::string& levelName)
+{
+	std::ofstream outputFileStream{};
+	outputFileStream.open("./../Data/Levels/" + levelName + ".txt", std::ofstream::out | std::ofstream::binary);
+	return outputFileStream;
+}
+
+// https://stackoverflow.com/questions/5585532/c-int-to-byte-array
+//std::vector<unsigned char> Level::GetIntToBytes(int32_t integer)
+//{
+//	std::vector<unsigned char> byteArray{};
+//	byteArray.resize(4);
+//	byteArray[0] = integer & (0x000000ff);
+//	byteArray[1] = (integer & (0x000000ff << 8)) >> 8;
+//	byteArray[2] = (integer & (0x000000ff << 16)) >> 16;
+//	byteArray[3] = (integer & (0x000000ff << 24)) >> 24;
+//	return byteArray;
+//}
+
+// https://stackoverflow.com/questions/5585532/c-int-to-byte-array
+std::vector<char>& Level::GetIntToBytes(int32_t integer, std::vector<char>& byteArrayVector)
+{
+	byteArrayVector.emplace_back(static_cast<char>(integer & (0x000000ff)));
+	byteArrayVector.emplace_back(static_cast<char>((integer & (0x000000ff << 8)) >> 8));
+	byteArrayVector.emplace_back(static_cast<char>((integer & (0x000000ff << 16)) >> 16));
+	byteArrayVector.emplace_back(static_cast<char>((integer & (0x000000ff << 24)) >> 24));
+	return byteArrayVector;
+}
+
+int32_t Level::GetIntFrom4Chars(char* pFirstchar)
+{
+	int32_t output{};
+	output = output | static_cast<int32_t>((pFirstchar[0]));
+	output = output | static_cast<int32_t>((pFirstchar[1]) << 8);
+	output = output | static_cast<int32_t>((pFirstchar[2]) << 16);
+	output = output | static_cast<int32_t>((pFirstchar[3]) << 24);
+	return output;
 }

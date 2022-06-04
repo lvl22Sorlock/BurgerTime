@@ -11,6 +11,12 @@ namespace dae
 	class InputManager;
 }
 
+class ComponentSpriteRenderer;
+
+namespace SimonGlobalEnums
+{
+	enum class CharacterType;
+}
 
 
 //-------------------------------------------------------------------------
@@ -19,7 +25,6 @@ namespace dae
 class ComponentCharacterController final : public ComponentBase
 {
 public:
-
 	ComponentCharacterController(dae::GameObject* pParent, const Vector2<float>& widthHeight);
 	~ComponentCharacterController();
 
@@ -41,13 +46,28 @@ public:
 	virtual bool IsCollidingWithOther(const CollisionBox& otherCollisionBox) const override { return m_CollisionBox.IsColliding(otherCollisionBox); };
 
 
-	void InitializeMovementInput(dae::InputManager& inputManager, char left, char right, char up, char down);
+	void InitializeMovementInput(dae::InputManager& inputManager, int playerNum = 0);
 	void MoveCharacter(const Vector2<float>& moveDirection);
 
 	void SetIsMovingAnim(bool* pIsMoving);
 	void SetIsMovingRightAnim(bool* pIsMovingRight);
+	void SetControllerType(SimonGlobalEnums::CharacterType controllerType);
+	void SetSpriteRenderer(ComponentSpriteRenderer* pSpriteRenderer);
+
+	const bool* GetIsOnLadderPtr() const;
+	const bool* GetIsOnUpwardsLadderPtr() const;
+	const bool* GetIsOnDownwardsLadderPtr() const;
+	const bool* GetIsOnPlatformPtr() const;
+	const bool* GetIsOnLeftPlatformPtr() const;
+	const bool* GetIsOnRightPlatformPtr() const;
 
 private:
+	enum class AnimationType
+	{
+		walking,
+		ladderUp,
+		ladderDown
+	};
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
@@ -58,11 +78,13 @@ private:
 	void SetAnimationVariables();
 	void CalculateCollisionBox();
 	Vector2<float> GetRoundedPos(const Vector2<float>& pos) const;
-
+	void SetAnimation(AnimationType animationType);
 
 	//-------------------------------------------------------------------------
 	//	Data Members
 	//-------------------------------------------------------------------------
+
+	SimonGlobalEnums::CharacterType m_CharacterType;
 
 	//// Collision
 	Vector2<float> m_WidthHeight;
@@ -85,11 +107,17 @@ private:
 	bool m_IsOnLeftPlatform;
 	bool m_IsOnRightPlatform;
 
-	// Animation
+	//// Animation
 	bool* m_pIsMovingAnimation;
 	bool* m_pIsMovingRightAnimation;
+	ComponentSpriteRenderer* m_pSpriteRenderer;
+	const std::wstring m_WALKING_ANIM_NAME;
+	const std::wstring m_LADDER_UP_ANIM_NAME;
+	const std::wstring m_LADDER_DOWN_ANIM_NAME;
+	AnimationType m_CurrentAnimation;
 
-
+	//// Attacking
+	int m_RemainingPepperAttacks;
 };
 
 

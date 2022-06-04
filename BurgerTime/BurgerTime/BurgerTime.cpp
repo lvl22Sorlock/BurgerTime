@@ -51,10 +51,13 @@ int main(int, char* [])
 #include "ComponentFollowOther.h"
 #include "FPSCounterBehaviour.h"
 #include "Level.h"
+#include "EnemyController.h"
 #pragma endregion
 
 #include "BurgerTimeGlobal.h"
 using namespace SimonGlobalConstants;
+
+#include <fstream>
 
 void LoadGame(void)
 {
@@ -106,8 +109,40 @@ void LoadGame(void)
 	//pLevelComponent->MakeLadder({ 0, 1 }, 0, scene);
 	//pLevelComponent->MakePlatform({ 2,0 }, 8, scene);
 	//pLevelComponent->MakePlatform({ 0,2 }, 5, scene);
+	std::ofstream outputLevelFileStream{pLevelComponent->GetLevelOutputFileStream("Level01")};
+	if (outputLevelFileStream.is_open())
+	{
+		pLevelComponent->MakePlatformFile({ 0,2 }, 18, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 0, 4 }, 2, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 4, 4 }, 2, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 6, 13 }, 2, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 9, 5 }, 2, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 13, 13 }, 2, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 15, 13 }, 2, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 18, 7 }, 2, outputLevelFileStream);
+		pLevelComponent->MakePlatformFile({ 13,8 }, 18, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 18, 13 }, 11, outputLevelFileStream);
+		pLevelComponent->MakePlatformFile({ 13,11 }, 18, outputLevelFileStream);
+		pLevelComponent->MakePlatformFile({ 6,9 }, 13, outputLevelFileStream);
+		pLevelComponent->MakePlatformFile({ 0,5 }, 4, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 2, 10 }, 5, outputLevelFileStream);
+		pLevelComponent->MakeLadderFile({ 0, 13 }, 7, outputLevelFileStream);
+		pLevelComponent->MakePlatformFile({ 5,6 }, 9, outputLevelFileStream);
+		pLevelComponent->MakePlatformFile({ 0,7 }, 4, outputLevelFileStream);
+		pLevelComponent->MakePlatformFile({ 0,11 }, 12, outputLevelFileStream);
+		pLevelComponent->MakePlatformFile({ 0,14 }, 18, outputLevelFileStream);
+	}
+	//pLevelComponent->ParseFile("./../Data/Levels/Level01.txt", scene);
 
 	pLevelComponent->MakePlatform({ 0,2 }, 18, scene);
+	pLevelComponent->MakePlatform({ 13,8 }, 18, scene);
+	pLevelComponent->MakePlatform({ 13,11 }, 18, scene);
+	pLevelComponent->MakePlatform({ 6,9 }, 13, scene);
+	pLevelComponent->MakePlatform({ 0,5 }, 4, scene);
+	pLevelComponent->MakePlatform({ 5,6 }, 9, scene);
+	pLevelComponent->MakePlatform({ 0,7 }, 4, scene);
+	pLevelComponent->MakePlatform({ 0,11 }, 12, scene);
+	pLevelComponent->MakePlatform({ 0,14 }, 18, scene);
 	pLevelComponent->MakeLadder({ 0, 4 }, 2, scene);
 	pLevelComponent->MakeLadder({ 4, 4 }, 2, scene);
 	pLevelComponent->MakeLadder({ 6, 13 }, 2, scene);
@@ -115,20 +150,10 @@ void LoadGame(void)
 	pLevelComponent->MakeLadder({ 13, 13 }, 2, scene);
 	pLevelComponent->MakeLadder({ 15, 13 }, 2, scene);
 	pLevelComponent->MakeLadder({ 18, 7 }, 2, scene);
-	pLevelComponent->MakePlatform({ 13,8 }, 18, scene);
 	pLevelComponent->MakeLadder({ 18, 13 }, 11, scene);
-	pLevelComponent->MakePlatform({ 13,11 }, 18, scene);
-
-	pLevelComponent->MakePlatform({ 6,9 }, 13, scene);
-
-	pLevelComponent->MakePlatform({ 0,5 }, 4, scene);
 	pLevelComponent->MakeLadder({ 2, 10 }, 5, scene);
 	pLevelComponent->MakeLadder({ 0, 13 }, 7, scene);
-	pLevelComponent->MakePlatform({ 5,6 }, 9, scene);
 
-	pLevelComponent->MakePlatform({ 0,7 }, 4, scene);
-	pLevelComponent->MakePlatform({ 0,11 }, 12, scene);
-	pLevelComponent->MakePlatform({ 0,14 }, 18, scene);
 
 #pragma endregion
 	
@@ -144,14 +169,11 @@ void LoadGame(void)
 
 	const auto pCharacterController{ new ComponentCharacterController(pPeterPepper.get(), {CELL_WIDTH, CELL_WIDTH})};
 	pPeterPepper->AddComponent(pCharacterController);
-	pCharacterController->InitializeMovementInput(InputManager::GetInstance(), 'a', 'd', 'w', 's');
+	pCharacterController->InitializeMovementInput(InputManager::GetInstance());
 
 	const auto pSpriteRenderer{ new ComponentSpriteRenderer(pPeterPepper.get(), {CELL_WIDTH,CELL_WIDTH})};
 	pPeterPepper->AddComponent(pSpriteRenderer);
-
-	pSpriteRenderer->AddAnimation(L"WalkHorizontal", ComponentSpriteRenderer::AnimInfo(Vector2<int>(48, 0), 1, 3));
-	pSpriteRenderer->TrySetAnimation(L"WalkHorizontal");
-	pSpriteRenderer->SetSpritesheet("BurgerTimeSprites.png");
+	pCharacterController->SetSpriteRenderer(pSpriteRenderer);
 
 	pCharacterController->SetIsMovingAnim(pSpriteRenderer->GetIsActivePtr());
 	pCharacterController->SetIsMovingRightAnim(pSpriteRenderer->GetIsMirroredPtr());
@@ -159,7 +181,55 @@ void LoadGame(void)
 	scene.Add(pPeterPepper);
 #pragma endregion
 
-	
+#pragma region Enemies
+	std::vector<const ComponentCharacterController*> m_PlayerPtrs{ pCharacterController };
+	auto pMrEnemy{ std::make_shared<GameObject>() };
+	pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 18, 12 }));
+
+	auto pEnemyCharacterController{ new ComponentCharacterController(pMrEnemy.get(), {CELL_WIDTH, CELL_WIDTH}) };
+	pMrEnemy->AddComponent(pEnemyCharacterController);
+	auto pEnemySpriteRenderer{new ComponentSpriteRenderer(pMrEnemy.get(), {CELL_WIDTH,CELL_WIDTH})};
+	pMrEnemy->AddComponent(pEnemySpriteRenderer);
+	auto pEnemyEnemyController{ new EnemyController(pMrEnemy.get(), SimonGlobalEnums::CharacterType::mrHotDog) };
+	pMrEnemy->AddComponent(pEnemyEnemyController);
+	pEnemyEnemyController->SetPlayerPtrs(m_PlayerPtrs);
+	pEnemyEnemyController->SetCharacterController(pEnemyCharacterController);
+	pEnemyCharacterController->SetSpriteRenderer(pEnemySpriteRenderer);
+	pEnemyCharacterController->SetIsMovingAnim(pEnemySpriteRenderer->GetIsActivePtr());
+	pEnemyCharacterController->SetIsMovingRightAnim(pEnemySpriteRenderer->GetIsMirroredPtr());
+	scene.Add(pMrEnemy);
+
+	pMrEnemy =  std::make_shared<GameObject>() ;
+	pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 9, 14 }));
+	pEnemyCharacterController =  new ComponentCharacterController(pMrEnemy.get(), {CELL_WIDTH, CELL_WIDTH}) ;
+	pMrEnemy->AddComponent(pEnemyCharacterController);
+	pEnemySpriteRenderer =  new ComponentSpriteRenderer(pMrEnemy.get(), {CELL_WIDTH,CELL_WIDTH}) ;
+	pMrEnemy->AddComponent(pEnemySpriteRenderer);
+	pEnemyEnemyController =  new EnemyController(pMrEnemy.get(), SimonGlobalEnums::CharacterType::mrPickle) ;
+	pMrEnemy->AddComponent(pEnemyEnemyController);
+	pEnemyEnemyController->SetPlayerPtrs(m_PlayerPtrs);
+	pEnemyEnemyController->SetCharacterController(pEnemyCharacterController);
+	pEnemyCharacterController->SetSpriteRenderer(pEnemySpriteRenderer);
+	pEnemyCharacterController->SetIsMovingAnim(pEnemySpriteRenderer->GetIsActivePtr());
+	pEnemyCharacterController->SetIsMovingRightAnim(pEnemySpriteRenderer->GetIsMirroredPtr());
+	scene.Add(pMrEnemy);
+
+	pMrEnemy = std::make_shared<GameObject>();
+	pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 0, 12 }));
+	pEnemyCharacterController = new ComponentCharacterController(pMrEnemy.get(), { CELL_WIDTH, CELL_WIDTH });
+	pMrEnemy->AddComponent(pEnemyCharacterController);
+	pEnemySpriteRenderer = new ComponentSpriteRenderer(pMrEnemy.get(), { CELL_WIDTH,CELL_WIDTH });
+	pMrEnemy->AddComponent(pEnemySpriteRenderer);
+	pEnemyEnemyController = new EnemyController(pMrEnemy.get(), SimonGlobalEnums::CharacterType::mrEgg);
+	pMrEnemy->AddComponent(pEnemyEnemyController);
+	pEnemyEnemyController->SetPlayerPtrs(m_PlayerPtrs);
+	pEnemyEnemyController->SetCharacterController(pEnemyCharacterController);
+	pEnemyCharacterController->SetSpriteRenderer(pEnemySpriteRenderer);
+	pEnemyCharacterController->SetIsMovingAnim(pEnemySpriteRenderer->GetIsActivePtr());
+	pEnemyCharacterController->SetIsMovingRightAnim(pEnemySpriteRenderer->GetIsMirroredPtr());
+	scene.Add(pMrEnemy);
+#pragma endregion
+
 	#pragma region DisplayAssignment
 		const auto pHealthDisplay{ std::make_shared<GameObject>() };
 		pHealthDisplay->AddComponent(new ComponentText(pHealthDisplay.get(), "HealthDisplayText", font));
@@ -179,9 +249,9 @@ void LoadGame(void)
 	#pragma endregion
 
 #pragma region Sound
-		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack", "/Data/Sounds/Soundtrack.ogg");
-		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack2", "/Data/Sounds/Soundtrack.mp3");
-		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack3", "/Data/Sounds/Soundtrack.flac");
+		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack", "./../Data/Sounds/Soundtrack.ogg");
+		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack2", "./../Data/Sounds/Soundtrack.mp3");
+		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack3", "./../Data/Sounds/Soundtrack.flac");
 		ServiceLocator::GetInstance().GetSoundSystem()->PlaySound("Soundtrack");
 		ServiceLocator::GetInstance().GetSoundSystem()->PlaySound("Soundtrack2");
 		ServiceLocator::GetInstance().GetSoundSystem()->PlaySound("Soundtrack3");

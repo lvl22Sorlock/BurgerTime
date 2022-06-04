@@ -184,8 +184,10 @@
     <ClCompile Include="ComponentText.cpp" />
     <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="ComponentTimer.cpp" />
+    <ClCompile Include="EnemyController.cpp" />
     <ClCompile Include="FPSCounterBehaviour.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="PepperCloud.cpp" />
     <ClCompile Include="Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -201,9 +203,11 @@
     <ClInclude Include="ComponentText.h" />
     <ClInclude Include="ComponentTexture.h" />
     <ClInclude Include="ComponentTimer.h" />
+    <ClInclude Include="EnemyController.h" />
     <ClInclude Include="FPSCounterBehaviour.h" />
     <ClInclude Include="BurgerTimeGlobal.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="PepperCloud.h" />
     <ClInclude Include="Platform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

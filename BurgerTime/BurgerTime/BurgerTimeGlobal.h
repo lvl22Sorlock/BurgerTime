@@ -25,7 +25,15 @@ namespace SimonGlobalEnums
 		ladderUpward,
 		platform,
 		platformLeft,
-		platformRight
+		platformRight,
+		pepperCloud
+	};
+	enum class CharacterType
+	{
+		player,
+		mrHotDog,
+		mrPickle,
+		mrEgg
 	};
 }
 

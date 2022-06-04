@@ -69,6 +69,12 @@
     <ClCompile Include="Platform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="PepperCloud.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyController.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimePCH.h">
@@ -117,6 +123,12 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Platform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PepperCloud.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyController.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

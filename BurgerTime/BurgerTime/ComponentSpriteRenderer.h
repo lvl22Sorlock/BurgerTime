@@ -44,7 +44,7 @@ public:
 		int nrCols{};
 	};
 
-	ComponentSpriteRenderer(dae::GameObject* pParent, const Vector2<float>& widthHeight, bool hasAnimations = true, const Vector2<float>& posOffset = {});
+	ComponentSpriteRenderer(dae::GameObject* pParent, const Vector2<float>& widthHeight, bool hasAnimations = false, const Vector2<float>& posOffset = {});
 	virtual ~ComponentSpriteRenderer() = default;
 
 	virtual void Render() const override;
@@ -93,7 +93,7 @@ private:
 
 	// Base
 	bool m_IsSpriteSheetSet;
-	const bool m_HAS_ANIMATIONS;
+	bool m_HasAnimations;
 	Vector2<float> m_PosOffset;
 	Vector2<float> m_WidthHeight;
 
