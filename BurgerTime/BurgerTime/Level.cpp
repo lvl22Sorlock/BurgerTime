@@ -14,6 +14,7 @@ using namespace SimonGlobalConstants;
 #include "Scene.h"
 #include "ComponentLadder.h"
 #include "ComponentSpriteRenderer.h"
+#include "Platform.h"
 
 //-------------------------------------------------------------------------
 //	Static datamembers
@@ -96,4 +97,67 @@ void Level::MakeLadder(const Vector2<int>& topIdcs, int bottomIdx, Scene& scene)
 			)
 		);
 	}
+}
+
+void Level::MakePlatform(const Vector2<int>& leftIdcx, int rightIdx, dae::Scene& scene)
+{
+	const int NR_PLATFORMS{ rightIdx - leftIdcx.x };
+	for (int idxX{ 0 }; idxX <= NR_PLATFORMS; ++idxX)
+	{
+		auto pPlatform{ std::make_shared<GameObject>() };
+		m_pParentGameObject->AddChild(pPlatform.get());
+		pPlatform->SetPosition(GetPosFromIdx({ idxX + leftIdcx.x, leftIdcx.y }));
+		scene.Add(pPlatform);
+		auto pLadderSpriteRenderer{ new ComponentSpriteRenderer(pPlatform.get(), {CELL_WIDTH,CELL_WIDTH}, false) };
+		pLadderSpriteRenderer->SetSpritesheet("platform.png");
+		pPlatform->AddComponent(pLadderSpriteRenderer);
+		CollisionBox platformCollisionBox = CollisionBox(GetPosFromIdx({ idxX + leftIdcx.x, leftIdcx.y }), CELL_WIDTH / 3, CELL_WIDTH / 3);
+		platformCollisionBox.leftBottom.x += (CELL_WIDTH / 3);
+		platformCollisionBox.rightTop.x += (CELL_WIDTH / 3);
+		platformCollisionBox.leftBottom.y += (CELL_WIDTH / 3);
+		platformCollisionBox.rightTop.y += (CELL_WIDTH / 3);
+		pPlatform->AddComponent(
+			new Platform(
+				pPlatform.get(),
+				platformCollisionBox
+			)
+		);
+	}
+
+	// Invisible left-only platform on the right
+	auto pPlatformLeftOnly{ std::make_shared<GameObject>() };
+	m_pParentGameObject->AddChild(pPlatformLeftOnly.get());
+	pPlatformLeftOnly->SetPosition(GetPosFromIdx({ leftIdcx.x-1, leftIdcx.y }));
+	scene.Add(pPlatformLeftOnly);
+	CollisionBox platformCollisionBox{ CollisionBox(GetPosFromIdx({leftIdcx.x - 1, leftIdcx.y }), CELL_WIDTH / 3, CELL_WIDTH / 3) };
+	platformCollisionBox.leftBottom.x += (CELL_WIDTH / 3);
+	platformCollisionBox.rightTop.x += (CELL_WIDTH / 3);
+	platformCollisionBox.leftBottom.y += (CELL_WIDTH / 3);
+	platformCollisionBox.rightTop.y += (CELL_WIDTH / 3);
+	pPlatformLeftOnly->AddComponent(
+		new Platform(
+			pPlatformLeftOnly.get(),
+			platformCollisionBox,
+			true,
+			false
+		)
+	);
+	// Invisible right-only platform on the left
+	auto pPlatformRightOnly{ std::make_shared<GameObject>() };
+	m_pParentGameObject->AddChild(pPlatformRightOnly.get());
+	pPlatformRightOnly->SetPosition(GetPosFromIdx({ rightIdx + 1, leftIdcx.y }));
+	scene.Add(pPlatformRightOnly);
+	platformCollisionBox = CollisionBox(GetPosFromIdx({ rightIdx + 1, leftIdcx.y }), CELL_WIDTH / 3, CELL_WIDTH / 3);
+	platformCollisionBox.leftBottom.x += (CELL_WIDTH / 3);
+	platformCollisionBox.rightTop.x += (CELL_WIDTH / 3);
+	platformCollisionBox.leftBottom.y += (CELL_WIDTH / 3);
+	platformCollisionBox.rightTop.y += (CELL_WIDTH / 3);
+	pPlatformRightOnly->AddComponent(
+		new Platform(
+			pPlatformRightOnly.get(),
+			platformCollisionBox,
+			true,
+			true
+		)
+	);
 }

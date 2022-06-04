@@ -14,22 +14,15 @@
 //-------------------------------------------------------------------------
 ServiceLocator::ServiceLocator()
 	:m_pSoundSystem{nullptr}
-{
-
-}
-
-ServiceLocator::~ServiceLocator()
-{
-
-}
+{}
 
 //-------------------------------------------------------------------------
 //	Member functions
 //-------------------------------------------------------------------------
 
-SoundSystem& ServiceLocator::GetSoundSystem()
+SoundSystem* ServiceLocator::GetSoundSystem()
 {
-	return *m_pSoundSystem;
+	return m_pSoundSystem;
 }
 
 void ServiceLocator::RegisterSoundSystem(SoundSystem* pSoundSystem)

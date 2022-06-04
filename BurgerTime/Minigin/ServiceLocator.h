@@ -3,31 +3,28 @@
 //	Include Files
 //-------------------------------------------------------------------------
 #include "Singleton.h"
-//class SoundSystem;
-#include "SoundSystem.h"
-
-using namespace dae;
+class SoundSystem;
 
 //-------------------------------------------------------------------------
 //	ServiceLocator Class
 //-------------------------------------------------------------------------
-class ServiceLocator final : public Singleton<ServiceLocator>
+class ServiceLocator final : public dae::Singleton<ServiceLocator>
 {
 public:
 	//-------------------------------------------------------------------------
 	//	Copy/move constructors and assignment operators
 	//-------------------------------------------------------------------------
 
-	ServiceLocator(const ServiceLocator& other) = delete;
-	ServiceLocator(ServiceLocator&& other) noexcept = delete;
-	ServiceLocator& operator=(const ServiceLocator& other) = delete;
-	ServiceLocator& operator=(ServiceLocator&& other)	noexcept = delete;
+	ServiceLocator(const ServiceLocator& other)						= delete;
+	ServiceLocator(ServiceLocator&& other) noexcept					= delete;
+	ServiceLocator& operator=(const ServiceLocator& other)			= delete;
+	ServiceLocator& operator=(ServiceLocator&& other)	noexcept	= delete;
 
 	//-------------------------------------------------------------------------
 	//	Member Functions
 	//-------------------------------------------------------------------------
 
-	SoundSystem& GetSoundSystem();
+	SoundSystem* GetSoundSystem();
 	void RegisterSoundSystem(SoundSystem* pSoundSystem);
 
 private:
@@ -37,7 +34,7 @@ private:
 	//-------------------------------------------------------------------------
 
 	ServiceLocator();
-	~ServiceLocator();
+	~ServiceLocator() = default;
 	SoundSystem* m_pSoundSystem;
 
 	//-------------------------------------------------------------------------

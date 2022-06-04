@@ -31,6 +31,8 @@ int main(int, char* [])
 #include "InputManager.h"
 #include "ResourceManager.h"
 #include "DebugManager.h"
+#include "ServiceLocator.h"
+#include "SoundSystem.h"
 #pragma endregion
 
 #pragma region ComponentIncludes
@@ -67,15 +69,15 @@ void LoadGame(void)
 
 #pragma region DefaultObjects
 	auto go{ std::make_shared<GameObject>() };
-	go->AddComponent(/*"Texture",*/ new ComponentTexture(go.get()));
-	ComponentTexture* pTexture = dynamic_cast<ComponentTexture*>(go->GetComponentPtr(typeid(ComponentTexture)/*"Texture"*/));
+	go->AddComponent(new ComponentTexture(go.get()));
+	ComponentTexture* pTexture = dynamic_cast<ComponentTexture*>(go->GetComponentPtr(typeid(ComponentTexture)));
 	if (pTexture) pTexture->SetTexture("background.jpg");
 	pTexture = nullptr;
 	scene.Add(go);
 
 	go = std::make_shared<GameObject>();
-	go->AddComponent(/*"Texture",*/ new ComponentTexture(go.get()));
-	pTexture = dynamic_cast<ComponentTexture*>(go->GetComponentPtr(typeid(ComponentTexture)/*"Texture"*/));
+	go->AddComponent(new ComponentTexture(go.get()));
+	pTexture = dynamic_cast<ComponentTexture*>(go->GetComponentPtr(typeid(ComponentTexture)));
 	if (pTexture) pTexture->SetTexture("logo.png");
 	pTexture = nullptr;
 	go->SetPosition(216, 180);
@@ -83,77 +85,56 @@ void LoadGame(void)
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<GameObject>();
-	to->AddComponent(/*"Text", */new ComponentText(to.get(), "Programming 4 Assignment", font));
+	to->AddComponent(new ComponentText(to.get(), "Programming 4 Assignment", font));
 	to->SetPosition(80, 20);
-	//ComponentText* pText = dynamic_cast<ComponentText*>(to->GetComponentPtr(typeid(ComponentText)/*"Text"*/));
-	//pText->SetPosition(80, 20);
 	scene.Add(to);
 #pragma endregion
 
 #pragma region FPSCounter
 	auto fpsCounter{ std::make_shared<GameObject>() };
-	fpsCounter->AddComponent(/*"Text",*/ new ComponentText(fpsCounter.get(), "FPSCOUNTER", font));
-	fpsCounter->AddComponent(/*"Timer",*/ new ComponentTimer(fpsCounter.get()));
-	fpsCounter->AddComponent(/*"FPSCounter",*/ new FPSCounterBehaviour(fpsCounter.get()));
-	//const auto pCharacterControllerFPS{ fpsCounter->GetAddComponent<ComponentCharacterController>(new ComponentCharacterController(fpsCounter.get())) };
-	//pCharacterControllerFPS->InitializeMovementInput(InputManager::GetInstance(), 'a', 'd', 'w', 's');
+	fpsCounter->AddComponent( new ComponentText(fpsCounter.get(), "FPSCOUNTER", font));
+	fpsCounter->AddComponent(new ComponentTimer(fpsCounter.get()));
+	fpsCounter->AddComponent(new FPSCounterBehaviour(fpsCounter.get()));
 	scene.Add(fpsCounter);
 #pragma endregion
 	
-#pragma region Ladders
+#pragma region Level
 	auto pLevel{ std::make_shared<GameObject>() };
 	scene.Add(pLevel);
 	auto pLevelComponent{ pLevel->GetAddComponent<Level>(new Level(pLevel.get())) };
-	pLevelComponent->MakeLadder({ 5, 10 }, 0, scene);
+	//pLevelComponent->MakeLadder({ 5, 12 }, 0, scene);
+	//pLevelComponent->MakeLadder({ 0, 1 }, 0, scene);
+	//pLevelComponent->MakePlatform({ 2,0 }, 8, scene);
+	//pLevelComponent->MakePlatform({ 0,2 }, 5, scene);
 
-	// a ladder
-	//====	Top Ladder	====//
-	auto pTestLadder{ std::make_shared<GameObject>() };
-	pTestLadder->SetPosition(0, 0);
-	scene.Add(pTestLadder);
-	pTestLadder->AddComponent(new ComponentLadder(pTestLadder.get(), CollisionBox({ 0, 0 }, CELL_WIDTH, CELL_WIDTH), false, true));
+	pLevelComponent->MakePlatform({ 0,2 }, 18, scene);
+	pLevelComponent->MakeLadder({ 0, 4 }, 2, scene);
+	pLevelComponent->MakeLadder({ 4, 4 }, 2, scene);
+	pLevelComponent->MakeLadder({ 6, 13 }, 2, scene);
+	pLevelComponent->MakeLadder({ 9, 5 }, 2, scene);
+	pLevelComponent->MakeLadder({ 13, 13 }, 2, scene);
+	pLevelComponent->MakeLadder({ 15, 13 }, 2, scene);
+	pLevelComponent->MakeLadder({ 18, 7 }, 2, scene);
+	pLevelComponent->MakePlatform({ 13,8 }, 18, scene);
+	pLevelComponent->MakeLadder({ 18, 13 }, 11, scene);
+	pLevelComponent->MakePlatform({ 13,11 }, 18, scene);
 
-	//====	Middle Ladders	====//
-	auto pTestLadder2{ std::make_shared<GameObject>() };
-	pTestLadder2->SetPosition(0, CELL_WIDTH);
-	scene.Add(pTestLadder2);
-	auto pComponentLadderSpriteRenderer2{ new ComponentSpriteRenderer(pTestLadder2.get(), {CELL_WIDTH,CELL_WIDTH}, false) };
-	pComponentLadderSpriteRenderer2->SetSpritesheet("ladder.png");
-	pTestLadder2->AddComponent(pComponentLadderSpriteRenderer2);
-	pTestLadder2->AddComponent(new ComponentLadder(pTestLadder2.get(), CollisionBox({ 0, CELL_WIDTH }, CELL_WIDTH, CELL_WIDTH )));
+	pLevelComponent->MakePlatform({ 6,9 }, 13, scene);
 
-	//====	Bottom Ladder	====//
-	auto pTestLadder3{ std::make_shared<GameObject>() };
-	pTestLadder3->SetPosition(0, 2* CELL_WIDTH);
-	scene.Add(pTestLadder3);
-	auto pComponentLadderSpriteRenderer3{ new ComponentSpriteRenderer(pTestLadder3.get(), {CELL_WIDTH,CELL_WIDTH}, false) };
-	pComponentLadderSpriteRenderer3->SetSpritesheet("ladder.png");
-	pTestLadder3->AddComponent(pComponentLadderSpriteRenderer3);
-	pTestLadder3->AddComponent(new ComponentLadder(pTestLadder3.get(), CollisionBox({ 0, 2* CELL_WIDTH }, CELL_WIDTH, CELL_WIDTH), true, false));
-	// Ladders Debug Visualisation
-	/*const auto pLadder1Collider{ std::make_shared<GameObject>() };
-	const auto pLadder1ColliderTexture{ new ComponentTexture(pLadder1Collider.get(), Vector2<float>(50,50)) };
-	pLadder1ColliderTexture->SetTexture("DebugGreenCollider3.png");
-	pLadder1Collider->AddComponent(pLadder1ColliderTexture);
-	scene.Add(pLadder1Collider);
-	const auto pLadder2Collider{ std::make_shared<GameObject>() };
-	pLadder2Collider->SetPosition({ 0, 50 });
-	const auto pLadder2ColliderTexture{ new ComponentTexture(pLadder2Collider.get(), Vector2<float>(50,50)) };
-	pLadder2ColliderTexture->SetTexture("DebugGreenCollider3.png");
-	pLadder2Collider->AddComponent(pLadder2ColliderTexture);
-	scene.Add(pLadder2Collider);
-	const auto pLadder3Collider{ std::make_shared<GameObject>() };
-	pLadder3Collider->SetPosition({ 0, 100 });
-	const auto pLadder3ColliderTexture{ new ComponentTexture(pLadder3Collider.get(), Vector2<float>(50,50)) };
-	pLadder3ColliderTexture->SetTexture("DebugGreenCollider3.png");
-	pLadder3Collider->AddComponent(pLadder3ColliderTexture);
-	scene.Add(pLadder3Collider);*/
-	//
+	pLevelComponent->MakePlatform({ 0,5 }, 4, scene);
+	pLevelComponent->MakeLadder({ 2, 10 }, 5, scene);
+	pLevelComponent->MakeLadder({ 0, 13 }, 7, scene);
+	pLevelComponent->MakePlatform({ 5,6 }, 9, scene);
+
+	pLevelComponent->MakePlatform({ 0,7 }, 4, scene);
+	pLevelComponent->MakePlatform({ 0,11 }, 12, scene);
+	pLevelComponent->MakePlatform({ 0,14 }, 18, scene);
+
 #pragma endregion
 	
 #pragma region PeterPepper
-	// Peter Pepper, currently Peter Pepper is just a HealthDisplay object
 	const auto pPeterPepper{ std::make_shared<GameObject>() };
+	pPeterPepper->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 0,2 }));
 
 	const auto pComponentHealth{ new ComponentHealth(pPeterPepper.get(), 3) };
 	pPeterPepper->AddComponent(pComponentHealth);
@@ -176,14 +157,6 @@ void LoadGame(void)
 	pCharacterController->SetIsMovingRightAnim(pSpriteRenderer->GetIsMirroredPtr());
 
 	scene.Add(pPeterPepper);
-
-	// Peter Pepper debug collider visualisation
-	/*const auto pPeterCollider{ std::make_shared<GameObject>() };
-	const auto pPeterColliderTexture{ new ComponentTexture(pPeterCollider.get(), Vector2<float>(50,50)) };
-	pPeterColliderTexture->SetTexture("DebugGreenCollider3.png");
-	pPeterCollider->AddComponent(pPeterColliderTexture);
-	pPeterCollider->AddComponent(new ComponentFollowOther(pPeterCollider.get(), pPeterPepper.get()));
-	scene.Add(pPeterCollider);*/
 #pragma endregion
 
 	
@@ -204,28 +177,14 @@ void LoadGame(void)
 		pComponentScoreManager->AddObserver(pComponentScoreDisplay);
 		scene.Add(pScoreDisplay);
 	#pragma endregion
-	
-	/*#pragma region InputAssignment
-		DieCommand* pDieCommand = new DieCommand(pPeterPepper.get());
-		GainScoreCommand* pGainScoreCommand = new GainScoreCommand(pPeterPepper.get());
-		auto& input = InputManager::GetInstance();
-	
-		input.AddCommandToCommandList(pDieCommand);
-		input.AddCommandToCommandList(pGainScoreCommand);
-		input.AddCommandToButton(dae::ControllerButton::ButtonA, pDieCommand);
-		input.AddCommandToButton(dae::ControllerButton::ButtonX, pGainScoreCommand);
-	
-	
-	
-		pComponentScoreManager->IncreaseScore(500);
-		pComponentScoreManager->IncreaseScore(2000);
-		pComponentHealth->DealDamage(1);
-		pComponentHealth->DealDamage(1);
-		pComponentHealth->DealDamage(1);
-	#pragma endregion*/
 
 #pragma region Sound
-
+		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack", "/Data/Sounds/Soundtrack.ogg");
+		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack2", "/Data/Sounds/Soundtrack.mp3");
+		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack3", "/Data/Sounds/Soundtrack.flac");
+		ServiceLocator::GetInstance().GetSoundSystem()->PlaySound("Soundtrack");
+		ServiceLocator::GetInstance().GetSoundSystem()->PlaySound("Soundtrack2");
+		ServiceLocator::GetInstance().GetSoundSystem()->PlaySound("Soundtrack3");
 #pragma endregion
 
 }

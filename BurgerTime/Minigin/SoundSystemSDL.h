@@ -7,10 +7,9 @@
 //-------------------------------------------------------------------------
 #include "SDL_mixer.h"
 #include "SoundSystem.h"
-//#include "Singleton.h"
+#include <queue>
+#include <string>
 #include <unordered_map>
-
-//using namespace dae;
 
 //-------------------------------------------------------------------------
 //	SoundSystemSDL Class
@@ -35,29 +34,56 @@ public:
 	//-------------------------------------------------------------------------
 
 	virtual void Update() override;
-	virtual size_t GetSoundId(const std::string& name) const override;
-	//virtual void PlaySound(int soundId, float volume) override;
-	//virtual void PlaySound(int soundId) override;
-	virtual void LoadSound(const std::string& soundName, const std::string& filePath) override;
+	virtual size_t GetSoundId(const std::string& name) const override;	
+	virtual void AddSound(const std::string& soundName, const std::string& filePath) override;	
+	void LoadSound(size_t soundId);
 
+
+	virtual void PlaySound(size_t soundId, int volume) override;
+	virtual void PlaySound(size_t soundId) override;
+	virtual void PlaySound(const std::string& soundName, int volume) override;
+	virtual void PlaySound(const std::string& soundName) override;
 
 private:
+	struct SoundPlayDescription
+	{
+		size_t soundId{};
+		bool isDifferentVolume{};
+		int soundVolume{};
+
+		SoundPlayDescription(size_t id)
+			:soundId{ id }
+			, isDifferentVolume{ false }
+			, soundVolume{ 64 }
+		{}
+
+		SoundPlayDescription(size_t id, int volume)
+			:soundId{ id }
+			, isDifferentVolume{ true }
+			, soundVolume{ volume }
+		{
+			soundVolume = std::clamp(soundVolume, 0, SDL_MIX_MAXVOLUME);
+		}
+	};
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 	
 	void FreeMusic();
 	bool IsSoundLoaded(size_t soundId) const;
+	void ProcessSound(const SoundPlayDescription& soundDescription);
+	void ProcessSoundQueue();
 
 	//-------------------------------------------------------------------------
 	//	Data Members
 	//-------------------------------------------------------------------------
 
+	std::queue<SoundPlayDescription> m_SoundQueue;
+	std::hash<std::string> m_SoundNameHasher;
 	std::unordered_map<std::string, size_t> m_SoundIds;
+	std::unordered_map<size_t, std::string> m_SoundPaths;
 	std::unordered_map<size_t, Mix_Music*> m_Sounds;
-
-private:
-
+	const int m_DEFAULT_VOLUME;
 };
 
 

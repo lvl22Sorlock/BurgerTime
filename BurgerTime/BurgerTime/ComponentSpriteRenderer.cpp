@@ -140,12 +140,3 @@ bool* ComponentSpriteRenderer::GetIsMirroredPtr()
 {
 	return &m_IsMirrored;
 }
-
-//void ComponentSpriteRenderer::SetIsActive(bool isActive)
-//{
-//	m_IsActive = isActive;
-//}
-//void ComponentSpriteRenderer::SetIsMirrored(bool isMirrored)
-//{
-//	m_IsMirrored = isMirrored;
-//}

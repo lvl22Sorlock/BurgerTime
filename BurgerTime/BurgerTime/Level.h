@@ -33,6 +33,7 @@ public:
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	void MakeLadder(const Vector2<int>& topIdcs, int bottomIdx, dae::Scene& scene);
+	void MakePlatform(const Vector2<int>& leftIdcx, int rightIdx, dae::Scene& scene);
 
 private:
 	//-------------------------------------------------------------------------

@@ -46,23 +46,3 @@ void ComponentLadder::Render() const
 {
 	DebugManager::GetInstance().RenderDebugSquare(m_CollisionBox.leftBottom, m_CollisionBox.GetWidthHeight());
 }
-
-//const CollisionBox& ComponentLadder::GetCollisionBox() const
-//{
-//	return m_CollisionBox;
-//}
-
-//Vector2<float> ComponentLadder::GetPos() const
-//{
-//	return m_pParentGameObject->GetPosition();
-//}
-
-//bool ComponentLadder::GetGoesUp() const
-//{
-//	return m_CanClimbUp;
-//}
-//
-//bool ComponentLadder::GetGoesDown() const
-//{
-//	return m_CanClimbDown;
-//}

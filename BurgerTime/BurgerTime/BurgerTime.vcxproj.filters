@@ -66,6 +66,9 @@
     <ClCompile Include="Level.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimePCH.h">
@@ -111,6 +114,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

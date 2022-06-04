@@ -43,25 +43,23 @@ void dae::Minigin::Initialize()
 {
 	PrintSDLVersion();
 	
-	if (SDL_Init(SDL_INIT_VIDEO & SDL_INIT_AUDIO) != 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
 
-	// SDL_Init(SDL_INIT_AUDIO) ??
-
 	#pragma region SDL_Mixer
 	// load support for the OGG and MOD sample/music formats
-	int flags = MIX_INIT_OGG | MIX_INIT_MOD;
-	int initted = Mix_Init(flags);
-	if ((initted & flags) != flags) {
-		printf("Mix_Init: Failed to init required ogg and mod support!\n");
-		printf("Mix_Init: %s\n", Mix_GetError());
-	}
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024) == -1)
-	{
-		printf("Mix_OpenAudio: %s\n", Mix_GetError());
-	}
+	//int flags = MIX_INIT_MP3 | MIX_INIT_OGG | MIX_INIT_FLAC;
+	//int initted = Mix_Init(flags);
+	//if ((initted&flags) != flags) {
+	//	printf("Mix_Init: Failed to init required ogg and flac support!\n");
+	//	printf("Mix_Init: %s\n", Mix_GetError());
+	//}
+	//if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024) < 0)//== -1)
+	//{
+	//	printf("Mix_OpenAudio: %s\n", Mix_GetError());
+	//}
 	#pragma endregion
 
 	m_Window = SDL_CreateWindow(
@@ -96,10 +94,10 @@ void dae::Minigin::Cleanup()
 	m_Window = nullptr;
 
 	#pragma region SDL_Mixer
-	//Mix_CloseAudio();
-	//// force a quit
-	//while (Mix_Init(0))
-	//	Mix_Quit();
+	Mix_CloseAudio();
+	// force a quit
+	while (Mix_Init(0))
+		Mix_Quit();
 	#pragma endregion
 
 	SDL_Quit();
@@ -113,19 +111,14 @@ void dae::Minigin::Run()
 	ResourceManager::GetInstance().Init("../Data/");
 
 	auto& input = InputManager::GetInstance();
-	auto sound = SoundSystemSDL();
-	ServiceLocator::GetInstance().RegisterSoundSystem(&sound);
-	ServiceLocator::GetInstance().GetSoundSystem().LoadSound("Default", "../Data/MP3/01 BGM #01.mp3");
-	sound.PlaySound(sound.GetSoundId("Default"));
+	std::shared_ptr<SoundSystemSDL> sound = std::make_shared<SoundSystemSDL>();
+	ServiceLocator::GetInstance().RegisterSoundSystem(sound.get());
 
 	LoadGame();
 
 	{
 		auto& renderer = Renderer::GetInstance();
 		auto& sceneManager = SceneManager::GetInstance();
-
-
-		// todo: this update loop could use some work.
 
 		auto lastTime = std::chrono::high_resolution_clock::now();
 		float lag = 0.0f;
@@ -161,7 +154,7 @@ void dae::Minigin::Run()
 			renderer.Render();
 
 			// Process Sounds
-			sound.Update();
+			sound->Update();
 		}
 	}
 

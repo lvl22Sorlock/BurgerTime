@@ -79,6 +79,11 @@ private:
 	bool m_IsOnUpwardLadder;
 	bool m_IsOnDownwardLadder;
 	float m_LadderXPos;
+	
+	// Platforms
+	bool m_IsOnPlatform;
+	bool m_IsOnLeftPlatform;
+	bool m_IsOnRightPlatform;
 
 	// Animation
 	bool* m_pIsMovingAnimation;

@@ -2,8 +2,11 @@
 
 namespace SimonGlobalConstants
 {
-	static const float CELL_WIDTH{ 35.0f };	// the width and height of 1 cell
+	static const float CELL_WIDTH{ 30.0f };	// the width and height of 1 cell
 	static const float EPSILON{ 0.0001f };	// for comparing floats / very small float value
+	static const Vector2<int> SCREEN_SIZE{ 640,480 };
+	static const Vector2<float> CELL_OFFSET{30.f, 0};
+
 }
 
 namespace SimonGlobalFunctions
@@ -19,7 +22,10 @@ namespace SimonGlobalEnums
 	{
 		ladder,
 		ladderDownward,
-		ladderUpward
+		ladderUpward,
+		platform,
+		platformLeft,
+		platformRight
 	};
 }
 
