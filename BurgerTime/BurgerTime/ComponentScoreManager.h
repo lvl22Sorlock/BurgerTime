@@ -12,12 +12,13 @@ public:
 	void IncreaseScore(int scoreToAdd);
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
+	virtual std::size_t GetTypeHash() override;
+
 	ComponentScoreManager(const ComponentScoreManager& other) = delete;
 	ComponentScoreManager(ComponentScoreManager&& other) noexcept = delete;
 	ComponentScoreManager& operator=(const ComponentScoreManager& other) = delete;
 	ComponentScoreManager& operator=(ComponentScoreManager&& other)	noexcept = delete;
 private:
-	virtual std::size_t GetTypeHash() override;
 
 	int m_CurrentScore;
 };

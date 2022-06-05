@@ -39,7 +39,7 @@ ComponentCharacterController::ComponentCharacterController(dae::GameObject* pPar
 	:ComponentBase(pParent)
 	// Movement
 	, m_MoveDirection()
-	, m_MOVEMENT_SPEED{100.f, 75.f}
+	, m_MOVEMENT_SPEED{90.f, 65.f}
 	, m_IsMoving{false}
 	, m_pIsMovingAnimation{nullptr}
 	, m_pIsMovingRightAnimation{nullptr}
@@ -114,8 +114,7 @@ void ComponentCharacterController::MoveCharacter(const Vector2<float>& moveDirec
 		||
 		std::abs(moveDirection.y) >= EPSILON)
 	{
-		m_IsMoving = true;
-		std::cout << moveDirection.x << ' ' << moveDirection.y << std::endl;
+		m_IsMoving = true;		
 	}
 	//std::cout << moveDirection.x << ' ' << moveDirection.y << std::endl;
 

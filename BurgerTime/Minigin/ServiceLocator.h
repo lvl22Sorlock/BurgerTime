@@ -11,6 +11,7 @@ class SoundSystem;
 class ServiceLocator final : public dae::Singleton<ServiceLocator>
 {
 public:
+	~ServiceLocator() = default;
 	//-------------------------------------------------------------------------
 	//	Copy/move constructors and assignment operators
 	//-------------------------------------------------------------------------
@@ -34,7 +35,6 @@ private:
 	//-------------------------------------------------------------------------
 
 	ServiceLocator();
-	~ServiceLocator() = default;
 	SoundSystem* m_pSoundSystem;
 
 	//-------------------------------------------------------------------------

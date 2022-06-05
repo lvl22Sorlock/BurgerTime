@@ -15,11 +15,12 @@ ComponentSpriteRenderer::ComponentSpriteRenderer(
 	dae::GameObject* pParent,
 	const Vector2<float>& widthHeight,
 	bool hasAnimations,
-	const Vector2<float>& posOffset
+	const Vector2<float>& posOffset,
+	const Vector2<int>& spriteWidthHeight
 )
 	:ComponentBase(pParent)
-	, m_SPRITE_WIDTH{ 16 }
-	, m_SPRITE_HEIGHT{ 16 }
+	, m_SPRITE_WIDTH{ spriteWidthHeight.x }
+	, m_SPRITE_HEIGHT{ spriteWidthHeight.y }
 	, m_OffsetPixelsToFirstSprite{}
 	, m_CurrentColIdx{}
 	, m_NrCols{3}

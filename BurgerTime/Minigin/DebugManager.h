@@ -16,7 +16,7 @@ namespace dae
 class DebugManager final: public dae::Singleton<DebugManager>
 {
 public:
-	DebugManager();
+	friend class dae::Singleton<DebugManager>;
 	~DebugManager() = default;
 
 	//-------------------------------------------------------------------------
@@ -36,6 +36,7 @@ public:
 	void RenderDebugSquare(const Vector2<float>& pos, const Vector2<float>& widthHeight);
 
 private:
+	DebugManager();
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------

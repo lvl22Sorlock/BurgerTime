@@ -40,6 +40,8 @@ public:
 
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; }
 
+	virtual std::size_t GetTypeHash() override;
+
 private:
 	enum class DirectionHorizontal
 	{
@@ -55,7 +57,6 @@ private:
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-	virtual std::size_t GetTypeHash() override;
 	Vector2<float> GetDirectionToNearestPlayer() const;
 	void TryChooseNewHorizontalDirection(float toPlayerDirection);
 	void TryChooseNewVerticalDirection(float toPlayerDirection);

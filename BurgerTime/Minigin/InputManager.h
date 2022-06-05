@@ -83,6 +83,8 @@ namespace dae
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
+		~InputManager();	// inputManager owns the commands
+
 		void HandleInput();
 		bool ProcessInput();		
 		
@@ -93,7 +95,6 @@ namespace dae
 	private:
 		friend class Singleton<InputManager>;
 		InputManager();
-		~InputManager();	// inputManager owns the commands
 
 		// Controller
 		std::unique_ptr<Xbox360ControllerInput> m_pXbox360ControllerInputU1;

@@ -6,8 +6,8 @@ namespace SimonGlobalConstants
 	static const float CELL_WIDTH{ 30.0f };	// the width and height of 1 cell
 	static const float EPSILON{ 0.0001f };	// for comparing floats / very small float value
 	static const Vector2<int> SCREEN_SIZE{ 640,480 };
-	static const Vector2<float> CELL_OFFSET{ 30.f, 0 };
-	static const std::string SPRITESHEET_PATH{ "BurgerTimeSprites2.png" };
+	static const Vector2<float> CELL_OFFSET{ 30.f, -30.f };
+	static const std::string SPRITESHEET_PATH{ "BurgerTimeSprites.png" };
 }
 
 namespace SimonGlobalFunctions
@@ -31,7 +31,8 @@ namespace SimonGlobalEnums
 		pepperCloud,
 		fallingBurgerIngredient,
 		ingredientPart,
-		player
+		player,
+		waitingPlate
 	};
 	enum class CharacterType
 	{

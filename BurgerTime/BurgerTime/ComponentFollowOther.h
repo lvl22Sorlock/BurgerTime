@@ -30,12 +30,13 @@ public:
 	void Update(float deltaTime) override;
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
+	virtual std::size_t GetTypeHash() override;
+
 private:
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-	virtual std::size_t GetTypeHash() override;
 
 	//-------------------------------------------------------------------------
 	//	Data Members

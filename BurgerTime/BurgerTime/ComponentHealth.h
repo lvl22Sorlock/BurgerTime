@@ -13,12 +13,13 @@ public:
 	void DealDamage(int damageToDeal);
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
+	virtual std::size_t GetTypeHash() override;
+
 	ComponentHealth(const ComponentHealth& other) = delete;
 	ComponentHealth(ComponentHealth&& other) noexcept = delete;
 	ComponentHealth& operator=(const ComponentHealth& other) = delete;
 	ComponentHealth& operator=(ComponentHealth&& other)	noexcept = delete;
 private:
-	virtual std::size_t GetTypeHash() override;
 
 	void Die();
 

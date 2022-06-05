@@ -13,13 +13,14 @@ public:
 	virtual void Update(float deltaTime) override;
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
+	virtual std::size_t GetTypeHash() override;
+
 	FPSCounterBehaviour(const FPSCounterBehaviour& other) = delete;
 	FPSCounterBehaviour(FPSCounterBehaviour&& other) noexcept = delete;
 	FPSCounterBehaviour& operator=(const FPSCounterBehaviour& other) = delete;
 	FPSCounterBehaviour& operator=(FPSCounterBehaviour&& other)	noexcept = delete;
 
 private:
-	virtual std::size_t GetTypeHash() override;
 
 	void Initialize();
 

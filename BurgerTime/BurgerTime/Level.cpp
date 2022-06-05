@@ -10,6 +10,7 @@ using namespace dae;
 #include "BurgerTimeGlobal.h"
 using namespace SimonGlobalFunctions;
 using namespace SimonGlobalConstants;
+using namespace SimonGlobalEnums;
 #include <memory>
 #include "Scene.h"
 #include "ComponentLadder.h"
@@ -17,6 +18,8 @@ using namespace SimonGlobalConstants;
 #include "Platform.h"
 #include <fstream>
 #include <iostream>
+#include "WaitingPlate.h"
+#include "FallingBurgerIngredient.h"
 
 //-------------------------------------------------------------------------
 //	Static datamembers
@@ -165,6 +168,37 @@ void Level::MakePlatform(const Vector2<int>& leftIdcx, int rightIdx, dae::Scene&
 	);
 }
 
+void Level::MakeWaitingPlate(const Vector2<int>& leftIdcs, dae::Scene& scene)
+{
+	auto pWaitingPlateObject{ std::make_shared<GameObject>() };
+	m_pParentGameObject->AddChild(pWaitingPlateObject.get());
+	pWaitingPlateObject->SetPosition(GetPosFromIdx({ leftIdcs.x - 1, leftIdcs.y }));
+	scene.Add(pWaitingPlateObject);
+	auto pWaitingPlateSpriteRenderer{ new ComponentSpriteRenderer(pWaitingPlateObject.get(), {CELL_WIDTH * 3, CELL_WIDTH}, false) };
+	pWaitingPlateSpriteRenderer->SetSpritesheet("waitingPlate.png");
+	pWaitingPlateObject->AddComponent(pWaitingPlateSpriteRenderer);
+	CollisionBox platformCollisionBox = CollisionBox(GetPosFromIdx({ leftIdcs.x - 1, leftIdcs.y }), CELL_WIDTH * 3, CELL_WIDTH / 3);
+	platformCollisionBox.rightTop.x += (CELL_WIDTH / 3);
+	platformCollisionBox.rightTop.y += 1.5f*(CELL_WIDTH / 3);
+	platformCollisionBox.leftBottom.y += 1.5f*(CELL_WIDTH / 3);
+	pWaitingPlateObject->AddComponent(
+		new WaitingPlate(
+			pWaitingPlateObject.get(),
+			platformCollisionBox
+		)
+	);
+}
+
+void Level::MakeIngredient(const Vector2<int>& leftIdcs, IngredientType type, dae::Scene& scene)
+{
+	auto pIngredient{ std::make_shared<GameObject>() };
+	m_pParentGameObject->AddChild(pIngredient.get());
+	pIngredient->SetPosition(GetPosFromIdx(leftIdcs));
+	auto pIngredientComponent{ new FallingBurgerIngredient(pIngredient.get(), {{0,0}, CELL_WIDTH * 3, CELL_WIDTH / 3 }, type, scene) };
+	pIngredient->AddComponent(pIngredientComponent);
+	scene.Add(pIngredient);
+}
+
 void Level::ParseFile(const std::string& filePath, dae::Scene& scene)
 {
 	std::ifstream ifs{};
@@ -217,14 +251,6 @@ void Level::ParseFileBlock(std::ifstream& ifs, dae::Scene& scene)
 
 void Level::MakeLadderFile(const Vector2<int>& topIdcs, int bottomIdx, std::ofstream& ofs)
 {
-	//std::vector<int32_t> valuesArray{};
-	//valuesArray.reserve(4);
-	//valuesArray.emplace_back(static_cast<int32_t>(BlockId::ladder));
-	//valuesArray.emplace_back(topIdcs.x);
-	//valuesArray.emplace_back(topIdcs.y);
-	//valuesArray.emplace_back(bottomIdx);
-	//ofs.write(static_cast<char*>(&valuesArray[0])
-
 	std::vector<char> byteArray{};
 	GetIntToBytes(static_cast<int32_t>(BlockId::ladder), byteArray);
 	GetIntToBytes(static_cast<int32_t>(topIdcs.x), byteArray);
@@ -241,14 +267,6 @@ void Level::MakePlatformFile(const Vector2<int>& leftIdcx, int rightIdx, std::of
 	GetIntToBytes(static_cast<int32_t>(leftIdcx.y), byteArray);
 	GetIntToBytes(static_cast<int32_t>(rightIdx), byteArray);
 	ofs.write(&byteArray[0], byteArray.size());
-	/*ofs << static_cast<int>(BlockId::platform);
-	ofs << ' ';
-	ofs << leftIdcx.x;
-	ofs << ' ';
-	ofs << leftIdcx.y;
-	ofs << ' ';
-	ofs << rightIdx;
-	ofs << ' ';*/
 }
 
 std::ofstream Level::GetLevelOutputFileStream(const std::string& levelName)
@@ -257,18 +275,6 @@ std::ofstream Level::GetLevelOutputFileStream(const std::string& levelName)
 	outputFileStream.open("./../Data/Levels/" + levelName + ".txt", std::ofstream::out | std::ofstream::binary);
 	return outputFileStream;
 }
-
-// https://stackoverflow.com/questions/5585532/c-int-to-byte-array
-//std::vector<unsigned char> Level::GetIntToBytes(int32_t integer)
-//{
-//	std::vector<unsigned char> byteArray{};
-//	byteArray.resize(4);
-//	byteArray[0] = integer & (0x000000ff);
-//	byteArray[1] = (integer & (0x000000ff << 8)) >> 8;
-//	byteArray[2] = (integer & (0x000000ff << 16)) >> 16;
-//	byteArray[3] = (integer & (0x000000ff << 24)) >> 24;
-//	return byteArray;
-//}
 
 // https://stackoverflow.com/questions/5585532/c-int-to-byte-array
 std::vector<char>& Level::GetIntToBytes(int32_t integer, std::vector<char>& byteArrayVector)

@@ -7,6 +7,10 @@ namespace dae
 {
 	class Scene;
 }
+namespace SimonGlobalEnums
+{
+	enum class IngredientType;
+}
 
 //-------------------------------------------------------------------------
 //	Level Class
@@ -38,6 +42,9 @@ public:
 	static void MakePlatformFile(const Vector2<int>& leftIdcx, int rightIdx, std::ofstream& ofs);
 	void MakeLadder(const Vector2<int>& topIdcs, int bottomIdx, dae::Scene& scene);
 	void MakePlatform(const Vector2<int>& leftIdcx, int rightIdx, dae::Scene& scene);
+	void MakeWaitingPlate(const Vector2<int>& leftIdcs, dae::Scene& scene);
+	void MakeIngredient(const Vector2<int>& leftIdcs, SimonGlobalEnums::IngredientType type, dae::Scene& scene);
+	virtual std::size_t GetTypeHash() override;
 
 private:
 	enum class BlockId
@@ -49,7 +56,6 @@ private:
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-	virtual std::size_t GetTypeHash() override;
 	void ParseFileBlock(std::ifstream& ifs, dae::Scene& scene);
 	//static std::vector<unsigned char> GetIntToBytes(int32_t integer);
 	static std::vector<char>& GetIntToBytes(int32_t integer, std::vector<char>& byteArrayVector);

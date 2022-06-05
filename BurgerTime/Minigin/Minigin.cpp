@@ -136,8 +136,9 @@ void dae::Minigin::Run()
 			// Updates
 			const auto currentTime = std::chrono::high_resolution_clock::now();
 			float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
-			if (m_IsTimePaused)
+			if (m_IsTimePaused) {
 				deltaTime = 0;
+			}
 			lastTime = currentTime;
 			lag += deltaTime;
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -189,8 +189,10 @@
     <ClCompile Include="FPSCounterBehaviour.cpp" />
     <ClCompile Include="IngredientPart.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="MenuManager.cpp" />
     <ClCompile Include="PepperCloud.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="WaitingPlate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimePCH.h" />
@@ -211,8 +213,10 @@
     <ClInclude Include="BurgerTimeGlobal.h" />
     <ClInclude Include="IngredientPart.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="MenuManager.h" />
     <ClInclude Include="PepperCloud.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="WaitingPlate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

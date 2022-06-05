@@ -61,6 +61,8 @@ public:
 	const bool* GetIsOnLeftPlatformPtr() const;
 	const bool* GetIsOnRightPlatformPtr() const;
 
+	virtual std::size_t GetTypeHash() override;
+
 private:
 	enum class AnimationType
 	{
@@ -72,7 +74,6 @@ private:
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-	virtual std::size_t GetTypeHash() override;
 
 	void CalculateMovement(float deltaTime);
 	void SetAnimationVariables();

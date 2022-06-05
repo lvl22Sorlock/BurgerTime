@@ -29,19 +29,15 @@ public:
 
 	virtual void Render() const override;
 
-	//const CollisionBox& GetCollisionBox() const;
 	virtual bool IsCollidingWithOther(const CollisionBox& otherCollisionBox) const override { return m_CollisionBox.IsColliding(otherCollisionBox); };
-	//float GetXPos() const;
-	/*Vector2<float> GetPos() const;
-	bool GetGoesUp() const;
-	bool GetGoesDown() const;*/
+
+	virtual std::size_t GetTypeHash() override;
 
 private:
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-	virtual std::size_t GetTypeHash() override;
 
 	//-------------------------------------------------------------------------
 	//	Data Members

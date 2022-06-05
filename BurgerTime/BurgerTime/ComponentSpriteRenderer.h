@@ -44,7 +44,7 @@ public:
 		int nrCols{};
 	};
 
-	ComponentSpriteRenderer(dae::GameObject* pParent, const Vector2<float>& widthHeight, bool hasAnimations = false, const Vector2<float>& posOffset = {});
+	ComponentSpriteRenderer(dae::GameObject* pParent, const Vector2<float>& widthHeight, bool hasAnimations = false, const Vector2<float>& posOffset = {}, const Vector2<int>& spriteWidthHeight = {16,16});
 	virtual ~ComponentSpriteRenderer() = default;
 
 	virtual void Render() const override;
@@ -73,12 +73,13 @@ public:
 	bool* GetIsActivePtr();
 	bool* GetIsMirroredPtr();
 
+	virtual std::size_t GetTypeHash() override;
+
 private:
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-	virtual std::size_t GetTypeHash() override;
 
 	void GoToNextSprite();
 	Vector2<int> GetSpriteSheetPos() const;

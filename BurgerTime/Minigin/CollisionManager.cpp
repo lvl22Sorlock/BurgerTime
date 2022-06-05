@@ -20,14 +20,14 @@
 //	Member functions
 //-------------------------------------------------------------------------
 
-bool CollisionManager::IsCollidingWithObjectOfTag(int32_t objectTag, const CollisionBox& collisionBox, ComponentBase** pOtherComponentPtr) const
+bool CollisionManager::IsCollidingWithObjectOfTag(int32_t objectTag, const CollisionBox& collisionBox, ComponentBase** pOtherComponentPtr, ComponentBase* pCallingObject) const
 {
 	if (m_CollidingObjectVectorsByTagMap.find(objectTag) == m_CollidingObjectVectorsByTagMap.end()) {
 		return false;
 	}
 	for (ComponentBase* pOtherComponent : m_CollidingObjectVectorsByTagMap.at(objectTag))
 	{
-		if (pOtherComponent->IsCollidingWithOther(collisionBox)) {
+		if (pOtherComponent->IsCollidingWithOther(collisionBox) && pCallingObject != pOtherComponent) {
 			if (pOtherComponentPtr)
 				*pOtherComponentPtr = pOtherComponent;
 			return true;

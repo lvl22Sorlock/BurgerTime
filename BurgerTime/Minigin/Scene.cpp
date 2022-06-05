@@ -51,3 +51,11 @@ void Scene::Render() const
 	}
 }
 
+void Scene::SetIsActiveAll(bool isActive)
+{
+	for (const auto& object : m_Objects)
+	{
+		object->SetActive(isActive);
+	}
+}
+

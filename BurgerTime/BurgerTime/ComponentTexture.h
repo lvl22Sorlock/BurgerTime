@@ -21,13 +21,13 @@ public:
 
 	void SetTexture(const std::string& filename);
 
+	virtual std::size_t GetTypeHash() override;
+
 	ComponentTexture(const ComponentTexture& other) = delete;
 	ComponentTexture(ComponentTexture&& other) noexcept = delete;
 	ComponentTexture& operator=(const ComponentTexture& other) = delete;
 	ComponentTexture& operator=(ComponentTexture&& other)	noexcept = delete;
-
 private:
-	virtual std::size_t GetTypeHash() override;
 
 	std::shared_ptr<dae::Texture2D> m_Texture{};
 	bool m_IsUsingWidthHeight;

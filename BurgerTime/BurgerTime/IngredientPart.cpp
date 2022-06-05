@@ -30,6 +30,9 @@ IngredientPart::IngredientPart(dae::GameObject* pParent, const CollisionBox& col
 	, m_WasCollidingWithPlayer{false}
 	, m_IsDropped{false}
 	, m_DROPPED_POS_Y_OFFSET{collisionBox.GetWidthHeight().y/4.0f}
+	, m_DROPPED_COOLDOWN{0.25f}
+	, m_CurrentDroppedCooldown{0.0f}
+	, m_IsOnPlate{false}
 {
 	Vector2<float> currentPos{ m_pParentGameObject->GetLocalPosition() };
 	m_pParentGameObject->SetPosition(currentPos.x, currentPos.y);
@@ -43,11 +46,14 @@ void IngredientPart::Render() const
 	DebugManager::GetInstance().RenderDebugSquare(m_CollisionBox.leftBottom, m_CollisionBox.GetWidthHeight());
 }
 
-void IngredientPart::Update(float)
+void IngredientPart::Update(float deltaTime)
 {
+	if (m_IsOnPlate) return;
+	m_CurrentDroppedCooldown -= deltaTime;
+	if (m_CurrentDroppedCooldown > 0) return;
+
 	Vector2<float> collisionBoxWidthHeigth{ m_CollisionBox.GetWidthHeight() };
 	m_CollisionBox = CollisionBox(m_pParentGameObject->GetPosition(), collisionBoxWidthHeigth.x, collisionBoxWidthHeigth.y);
-
 	bool isCollidingWithPlayer{ CollisionManager::GetInstance().IsCollidingWithObjectOfTag(static_cast<int32_t>(CollisionTag::player), m_CollisionBox, nullptr) };
 	if (!isCollidingWithPlayer
 		&& 
@@ -59,6 +65,7 @@ void IngredientPart::Update(float)
 		Vector2<float> currentPos{ m_pParentGameObject->GetLocalPosition()};
 		m_pParentGameObject->SetPosition(currentPos.x, currentPos.y + m_DROPPED_POS_Y_OFFSET);
 		m_IsDropped = true;
+		m_CurrentDroppedCooldown = m_DROPPED_COOLDOWN;
 	}
 
 	m_WasCollidingWithPlayer = isCollidingWithPlayer;
@@ -67,8 +74,14 @@ void IngredientPart::Update(float)
 void IngredientPart::SetIsDroppedFalse()
 {
 	if (!m_IsDropped) return;
-
 	m_IsDropped = false;
 	Vector2<float> currentPos{ m_pParentGameObject->GetLocalPosition() };
 	m_pParentGameObject->SetPosition(currentPos.x, currentPos.y - m_DROPPED_POS_Y_OFFSET);
+	m_CurrentDroppedCooldown = m_DROPPED_COOLDOWN;
+	m_WasCollidingWithPlayer = false;
+}
+
+void IngredientPart::SetIsOnPlate()
+{
+
 }

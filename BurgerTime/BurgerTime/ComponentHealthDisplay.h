@@ -15,12 +15,13 @@ public:
 	void OnNotify(Observer::Event event, void* pData = nullptr) override;
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
+	virtual std::size_t GetTypeHash() override;
+
 	ComponentHealthDisplay(const ComponentHealthDisplay& other) = delete;
 	ComponentHealthDisplay(ComponentHealthDisplay&& other) noexcept = delete;
 	ComponentHealthDisplay& operator=(const ComponentHealthDisplay& other) = delete;
 	ComponentHealthDisplay& operator=(ComponentHealthDisplay&& other)	noexcept = delete;
 private:
-	virtual std::size_t GetTypeHash() override;
 
 	void Initialize();
 	void Initialize(dae::GameObject* pHealthComponentSource);

@@ -18,14 +18,7 @@ using namespace dae;
 class CollisionManager final : public Singleton<CollisionManager>
 {
 public:
-	CollisionManager() = default;
-	//enum class CollidingObjectType
-	//{
-	//	ladder,
-	//	ladderUpwards,
-	//	ladderDownwards
-	//};
-
+	friend class dae::Singleton<CollisionManager>;
 	~CollisionManager() = default;
 
 	//-------------------------------------------------------------------------
@@ -45,12 +38,13 @@ public:
 	//void AddPlayer(const ComponentCharacterController* pPlayer);
 	void AddCollidingObject(int32_t tag, ComponentBase* pObject);
 
-	bool IsCollidingWithObjectOfTag(int32_t objectTag, const CollisionBox& collisionBox, ComponentBase** pOtherComponentPtr) const;
+	bool IsCollidingWithObjectOfTag(int32_t objectTag, const CollisionBox& collisionBox, ComponentBase** pOtherComponentPtr = nullptr, ComponentBase* pCallingObject = nullptr) const;
 	//bool IsCollidingWithLadder(const CollisionBox& collisionBox, Vector2<float>& ladderXPosOut) const;
 	//bool IsCollidingWithUpLadder(const CollisionBox& collisionBox, Vector2<float>& ladderXPosOut) const;
 	//bool IsCollidingWithDownLadder(const CollisionBox& collisionBox, Vector2<float>& ladderXPosOut) const;
 
 private:
+	CollisionManager() = default;
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------

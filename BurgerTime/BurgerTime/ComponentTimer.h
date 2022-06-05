@@ -17,13 +17,14 @@ public:
 	float GetAverageFPS() const;
 	int GetCurrentFPSRounded() const;
 
+	virtual std::size_t GetTypeHash() override;
+
 	ComponentTimer(const ComponentTimer& other) = delete;
 	ComponentTimer(ComponentTimer&& other) noexcept = delete;
 	ComponentTimer& operator=(const ComponentTimer& other) = delete;
 	ComponentTimer& operator=(ComponentTimer&& other)	noexcept = delete;
 
 private:
-	virtual std::size_t GetTypeHash() override;
 
 	void UpdateCurrentFPS(float deltaTime);
 

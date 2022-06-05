@@ -24,6 +24,9 @@ public:
 	virtual bool IsCollidingWithOther(const CollisionBox& /*otherCollisionBox*/) const = 0;
 	dae::GameObject* GetParent() const { return m_pParentGameObject; }
 
+	//https://stackoverflow.com/questions/32016809/using-typeid-to-get-name-of-derived-class/32016926
+	virtual std::size_t GetTypeHash() = 0;
+
 	ComponentBase(const ComponentBase& other) = delete;
 	ComponentBase(ComponentBase&& other) noexcept = delete;
 	ComponentBase& operator=(const ComponentBase& other) = delete;
@@ -31,8 +34,5 @@ public:
 protected:
 	ComponentBase(dae::GameObject* pParent);
 	dae::GameObject* m_pParentGameObject;
-
-	//https://stackoverflow.com/questions/32016809/using-typeid-to-get-name-of-derived-class/32016926
-	virtual std::size_t GetTypeHash() = 0;
 };
 

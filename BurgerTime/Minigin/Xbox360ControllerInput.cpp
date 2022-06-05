@@ -106,6 +106,7 @@ Xbox360ControllerInput::Xbox360ControllerInputImpl::Xbox360ControllerInputImpl(D
 	m_ControllerButtonValues[XINPUT_GAMEPAD_DPAD_DOWN]			= ControllerButton::DPadDown;
 	m_ControllerButtonValues[XINPUT_GAMEPAD_LEFT_SHOULDER]		= ControllerButton::LeftShoulder;
 	m_ControllerButtonValues[XINPUT_GAMEPAD_RIGHT_SHOULDER]		= ControllerButton::RightShoulder;
+	m_ControllerButtonValues[XINPUT_GAMEPAD_START]				= ControllerButton::options;
 }
 
 bool Xbox360ControllerInput::Xbox360ControllerInputImpl::Update()

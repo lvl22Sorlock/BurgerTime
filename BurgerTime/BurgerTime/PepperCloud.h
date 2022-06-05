@@ -30,13 +30,13 @@ public:
 	virtual void Render() const override;
 
 	virtual bool IsCollidingWithOther(const CollisionBox& otherCollisionBox) const override { return m_CollisionBox.IsColliding(otherCollisionBox); };
+	virtual std::size_t GetTypeHash() override;
 
 private:
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-	virtual std::size_t GetTypeHash() override;
 
 	//-------------------------------------------------------------------------
 	//	Data Members

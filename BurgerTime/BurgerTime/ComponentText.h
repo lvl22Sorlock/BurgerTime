@@ -24,13 +24,14 @@ public:
 	void SetText(const std::string& text);
 	//void SetPosition(float x, float y);
 
+	virtual std::size_t GetTypeHash() override;
+
 	ComponentText(const ComponentText& other) = delete;
 	ComponentText(ComponentText&& other) noexcept = delete;
 	ComponentText& operator=(const ComponentText& other) = delete;
 	ComponentText& operator=(ComponentText&& other)	noexcept = delete;
 
 private:
-	virtual std::size_t GetTypeHash() override;
 
 	bool m_NeedsUpdate;
 	std::string m_Text;

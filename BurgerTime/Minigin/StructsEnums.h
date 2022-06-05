@@ -122,6 +122,19 @@ struct CollisionBox
 
 		return true;
 	}
+
+	bool IsSame(const CollisionBox& other) const
+	{
+		const float EPSILON{ 0.0001f };
+		return
+			(std::abs(leftBottom.x - other.leftBottom.x) <= EPSILON
+				&&
+				std::abs(leftBottom.y - other.leftBottom.y) <= EPSILON
+				&&
+				std::abs(rightTop.x - other.rightTop.x) <= EPSILON
+				&&
+				std::abs(rightTop.y - other.rightTop.y) <= EPSILON);
+	}
 };
 
 namespace inputEnums
@@ -139,7 +152,8 @@ namespace inputEnums
 		//LeftThumb,
 		//RightThumb,
 		LeftShoulder,
-		RightShoulder
+		RightShoulder,
+		options
 	};
 	enum class ControllerJoystickDirection
 	{
