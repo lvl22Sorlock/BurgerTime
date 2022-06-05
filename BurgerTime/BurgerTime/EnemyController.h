@@ -17,7 +17,7 @@ namespace SimonGlobalEnums
 class EnemyController final : public ComponentBase
 {
 public:
-	EnemyController(dae::GameObject* pParent, SimonGlobalEnums::CharacterType enemyType);
+	EnemyController(dae::GameObject* pParent, SimonGlobalEnums::CharacterType enemyType, bool canRandomlyChangeDirection = false);
 	~EnemyController() = default;
 
 	//-------------------------------------------------------------------------
@@ -33,7 +33,7 @@ public:
 	//	Member Functions
 	//-------------------------------------------------------------------------
 
-	virtual void Update(float) override;
+	virtual void FixedUpdate(float) override;
 
 	void SetCharacterController(ComponentCharacterController* pCharacterController);
 	static void SetPlayerPtrs(const std::vector<const ComponentCharacterController*>& playerPtrs);
@@ -72,15 +72,22 @@ private:
 	static std::vector<const ComponentCharacterController*> m_PlayerPtrs;
 
 	const bool* m_pIsOnLadder;
-	bool m_WasOnLadder;
-	bool m_CanChangeVerticalDirection;
 	const bool* m_pIsOnUpwardsLadder;
 	const bool* m_pIsOnDownwardsLadder;
 	const bool* m_pIsOnPlatform;
-	bool m_WasOnPlatform;
-	bool m_CanChangeHorizontalDirection;
 	const bool* m_pIsOnLeftPlatform;
 	const bool* m_pIsOnRightPlatform;
+
+	bool m_WasOnLadder;
+	bool m_WasOnPlatform;
+	bool m_CanChangeVerticalDirection;
+	bool m_CanChangeHorizontalDirection;
+
+	bool m_CanRandomlyChangeDirection;
+	const float m_MIN_RANDOM_DIRECTION_CHANGE_TIME;
+	const float m_MAX_RANDOM_DIRECTION_CHANGE_TIME;
+	float m_CurrentRandomDirectionChangeCooldown;
+
 	Vector2<float> m_CurrentDirection;
 	bool m_HasInitializedDirection;
 };

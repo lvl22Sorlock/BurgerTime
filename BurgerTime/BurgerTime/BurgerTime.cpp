@@ -17,7 +17,7 @@ void LoadGame(void);
 
 int main(int, char* [])
 {
-	dae::Minigin engine;
+	dae::Minigin engine{};
 	std::function<void(void)> loadGameFunc{LoadGame};
 	engine.SetLoadGameCallbackFunction(&loadGameFunc);
 	engine.Run();
@@ -52,10 +52,13 @@ int main(int, char* [])
 #include "FPSCounterBehaviour.h"
 #include "Level.h"
 #include "EnemyController.h"
+#include "FallingBurgerIngredient.h"
 #pragma endregion
 
 #include "BurgerTimeGlobal.h"
 using namespace SimonGlobalConstants;
+using namespace SimonGlobalEnums;
+using namespace SimonGlobalFunctions;
 
 #include <fstream>
 
@@ -71,26 +74,26 @@ void LoadGame(void)
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 
 #pragma region DefaultObjects
-	auto go{ std::make_shared<GameObject>() };
-	go->AddComponent(new ComponentTexture(go.get()));
-	ComponentTexture* pTexture = dynamic_cast<ComponentTexture*>(go->GetComponentPtr(typeid(ComponentTexture)));
+	const auto backgroundObject{ std::make_shared<GameObject>() };	
+	ComponentTexture* pTexture 
+		= backgroundObject->GetAddComponent<ComponentTexture>(new ComponentTexture(backgroundObject.get()));
 	if (pTexture) pTexture->SetTexture("background.jpg");
 	pTexture = nullptr;
-	scene.Add(go);
+	scene.Add(backgroundObject);
 
-	go = std::make_shared<GameObject>();
-	go->AddComponent(new ComponentTexture(go.get()));
-	pTexture = dynamic_cast<ComponentTexture*>(go->GetComponentPtr(typeid(ComponentTexture)));
+	const auto logoObject{ std::make_shared<GameObject>() };	
+	pTexture 
+		= logoObject->GetAddComponent<ComponentTexture>(new ComponentTexture(logoObject.get(), {208*0.85f, 65*0.85f}));
 	if (pTexture) pTexture->SetTexture("logo.png");
 	pTexture = nullptr;
-	go->SetPosition(216, 180);
-	scene.Add(go);
+	logoObject->SetPosition(242.5f, 220); //(216, 210);
+	scene.Add(logoObject);
 
-	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<GameObject>();
-	to->AddComponent(new ComponentText(to.get(), "Programming 4 Assignment", font));
-	to->SetPosition(80, 20);
-	scene.Add(to);
+	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 18);
+	//auto to = std::make_shared<GameObject>();
+	//to->AddComponent(new ComponentText(to.get(), "Programming 4 Assignment", font));
+	//to->SetPosition(80, 20);
+	//scene.Add(to);
 #pragma endregion
 
 #pragma region FPSCounter
@@ -159,7 +162,7 @@ void LoadGame(void)
 	
 #pragma region PeterPepper
 	const auto pPeterPepper{ std::make_shared<GameObject>() };
-	pPeterPepper->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 0,2 }));
+	pPeterPepper->SetPosition(GetPosFromIdx({ 0,2 }));
 
 	const auto pComponentHealth{ new ComponentHealth(pPeterPepper.get(), 3) };
 	pPeterPepper->AddComponent(pComponentHealth);
@@ -167,9 +170,9 @@ void LoadGame(void)
 	const auto pComponentScoreManager{ new ComponentScoreManager(pPeterPepper.get()) };
 	pPeterPepper->AddComponent(pComponentScoreManager);
 
-	const auto pCharacterController{ new ComponentCharacterController(pPeterPepper.get(), {CELL_WIDTH, CELL_WIDTH})};
+	const auto pCharacterController{ new ComponentCharacterController(pPeterPepper.get(), {CELL_WIDTH, CELL_WIDTH}, true)};
 	pPeterPepper->AddComponent(pCharacterController);
-	pCharacterController->InitializeMovementInput(InputManager::GetInstance());
+	pCharacterController->InitializeMovementInput(InputManager::GetInstance(), 1);
 
 	const auto pSpriteRenderer{ new ComponentSpriteRenderer(pPeterPepper.get(), {CELL_WIDTH,CELL_WIDTH})};
 	pPeterPepper->AddComponent(pSpriteRenderer);
@@ -181,72 +184,80 @@ void LoadGame(void)
 	scene.Add(pPeterPepper);
 #pragma endregion
 
-#pragma region Enemies
-	std::vector<const ComponentCharacterController*> m_PlayerPtrs{ pCharacterController };
-	auto pMrEnemy{ std::make_shared<GameObject>() };
-	pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 18, 12 }));
-
-	auto pEnemyCharacterController{ new ComponentCharacterController(pMrEnemy.get(), {CELL_WIDTH, CELL_WIDTH}) };
-	pMrEnemy->AddComponent(pEnemyCharacterController);
-	auto pEnemySpriteRenderer{new ComponentSpriteRenderer(pMrEnemy.get(), {CELL_WIDTH,CELL_WIDTH})};
-	pMrEnemy->AddComponent(pEnemySpriteRenderer);
-	auto pEnemyEnemyController{ new EnemyController(pMrEnemy.get(), SimonGlobalEnums::CharacterType::mrHotDog) };
-	pMrEnemy->AddComponent(pEnemyEnemyController);
-	pEnemyEnemyController->SetPlayerPtrs(m_PlayerPtrs);
-	pEnemyEnemyController->SetCharacterController(pEnemyCharacterController);
-	pEnemyCharacterController->SetSpriteRenderer(pEnemySpriteRenderer);
-	pEnemyCharacterController->SetIsMovingAnim(pEnemySpriteRenderer->GetIsActivePtr());
-	pEnemyCharacterController->SetIsMovingRightAnim(pEnemySpriteRenderer->GetIsMirroredPtr());
-	scene.Add(pMrEnemy);
-
-	pMrEnemy =  std::make_shared<GameObject>() ;
-	pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 9, 14 }));
-	pEnemyCharacterController =  new ComponentCharacterController(pMrEnemy.get(), {CELL_WIDTH, CELL_WIDTH}) ;
-	pMrEnemy->AddComponent(pEnemyCharacterController);
-	pEnemySpriteRenderer =  new ComponentSpriteRenderer(pMrEnemy.get(), {CELL_WIDTH,CELL_WIDTH}) ;
-	pMrEnemy->AddComponent(pEnemySpriteRenderer);
-	pEnemyEnemyController =  new EnemyController(pMrEnemy.get(), SimonGlobalEnums::CharacterType::mrPickle) ;
-	pMrEnemy->AddComponent(pEnemyEnemyController);
-	pEnemyEnemyController->SetPlayerPtrs(m_PlayerPtrs);
-	pEnemyEnemyController->SetCharacterController(pEnemyCharacterController);
-	pEnemyCharacterController->SetSpriteRenderer(pEnemySpriteRenderer);
-	pEnemyCharacterController->SetIsMovingAnim(pEnemySpriteRenderer->GetIsActivePtr());
-	pEnemyCharacterController->SetIsMovingRightAnim(pEnemySpriteRenderer->GetIsMirroredPtr());
-	scene.Add(pMrEnemy);
-
-	pMrEnemy = std::make_shared<GameObject>();
-	pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 0, 12 }));
-	pEnemyCharacterController = new ComponentCharacterController(pMrEnemy.get(), { CELL_WIDTH, CELL_WIDTH });
-	pMrEnemy->AddComponent(pEnemyCharacterController);
-	pEnemySpriteRenderer = new ComponentSpriteRenderer(pMrEnemy.get(), { CELL_WIDTH,CELL_WIDTH });
-	pMrEnemy->AddComponent(pEnemySpriteRenderer);
-	pEnemyEnemyController = new EnemyController(pMrEnemy.get(), SimonGlobalEnums::CharacterType::mrEgg);
-	pMrEnemy->AddComponent(pEnemyEnemyController);
-	pEnemyEnemyController->SetPlayerPtrs(m_PlayerPtrs);
-	pEnemyEnemyController->SetCharacterController(pEnemyCharacterController);
-	pEnemyCharacterController->SetSpriteRenderer(pEnemySpriteRenderer);
-	pEnemyCharacterController->SetIsMovingAnim(pEnemySpriteRenderer->GetIsActivePtr());
-	pEnemyCharacterController->SetIsMovingRightAnim(pEnemySpriteRenderer->GetIsMirroredPtr());
-	scene.Add(pMrEnemy);
+#pragma region BurgerIngredients
+	auto pIngredient{ std::make_shared<GameObject>() };
+	pIngredient->SetPosition(GetPosFromIdx({ 2, 2 }));
+	auto pIngredientComponent{ new FallingBurgerIngredient(pIngredient.get(), {{0,0}, CELL_WIDTH*3, CELL_WIDTH}, IngredientType::bunTop, scene) };
+	pIngredient->AddComponent(pIngredientComponent);
+	scene.Add(pIngredient);
 #pragma endregion
 
-	#pragma region DisplayAssignment
-		const auto pHealthDisplay{ std::make_shared<GameObject>() };
-		pHealthDisplay->AddComponent(new ComponentText(pHealthDisplay.get(), "HealthDisplayText", font));
-		const auto pComponentHealthDisplay{new ComponentHealthDisplay(pHealthDisplay.get(), pPeterPepper.get())};
-		pHealthDisplay->AddComponent(pComponentHealthDisplay);
-		pHealthDisplay->SetPosition(0, 100);
-		pComponentHealth->AddObserver(pComponentHealthDisplay);
-		scene.Add(pHealthDisplay);
-	
-		const auto pScoreDisplay{ std::make_shared<GameObject>() };
-		pScoreDisplay->AddComponent(new ComponentText(pScoreDisplay.get(), "ScoreDisplayText", font));
-		const auto pComponentScoreDisplay{new ComponentScoreDisplay(pScoreDisplay.get(), pPeterPepper.get())};
-		pScoreDisplay->AddComponent(pComponentScoreDisplay);
-		pScoreDisplay->SetPosition(0, 130);
-		pComponentScoreManager->AddObserver(pComponentScoreDisplay);
-		scene.Add(pScoreDisplay);
-	#pragma endregion
+#pragma region Enemies
+	//std::vector<const ComponentCharacterController*> m_PlayerPtrs{ pCharacterController };
+	//auto pMrEnemy{ std::make_shared<GameObject>() };
+	//pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 18, 12 }));
+
+	//auto pEnemyCharacterController{ new ComponentCharacterController(pMrEnemy.get(), {CELL_WIDTH, CELL_WIDTH}) };
+	//pMrEnemy->AddComponent(pEnemyCharacterController);
+	//auto pEnemySpriteRenderer{new ComponentSpriteRenderer(pMrEnemy.get(), {CELL_WIDTH,CELL_WIDTH})};
+	//pMrEnemy->AddComponent(pEnemySpriteRenderer);
+	//auto pEnemyEnemyController{ new EnemyController(pMrEnemy.get(), SimonGlobalEnums::CharacterType::mrHotDog) };
+	//pMrEnemy->AddComponent(pEnemyEnemyController);
+	//pEnemyEnemyController->SetPlayerPtrs(m_PlayerPtrs);
+	//pEnemyEnemyController->SetCharacterController(pEnemyCharacterController);
+	//pEnemyCharacterController->SetSpriteRenderer(pEnemySpriteRenderer);
+	//pEnemyCharacterController->SetIsMovingAnim(pEnemySpriteRenderer->GetIsActivePtr());
+	//pEnemyCharacterController->SetIsMovingRightAnim(pEnemySpriteRenderer->GetIsMirroredPtr());
+	//scene.Add(pMrEnemy);
+
+	//pMrEnemy =  std::make_shared<GameObject>() ;
+	//pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 9, 14 }));
+	//pEnemyCharacterController =  new ComponentCharacterController(pMrEnemy.get(), {CELL_WIDTH, CELL_WIDTH}) ;
+	//pMrEnemy->AddComponent(pEnemyCharacterController);
+	//pEnemySpriteRenderer =  new ComponentSpriteRenderer(pMrEnemy.get(), {CELL_WIDTH,CELL_WIDTH}) ;
+	//pMrEnemy->AddComponent(pEnemySpriteRenderer);
+	//pEnemyEnemyController =  new EnemyController(pMrEnemy.get(), SimonGlobalEnums::CharacterType::mrPickle, true) ;
+	//pMrEnemy->AddComponent(pEnemyEnemyController);
+	//pEnemyEnemyController->SetPlayerPtrs(m_PlayerPtrs);
+	//pEnemyEnemyController->SetCharacterController(pEnemyCharacterController);
+	//pEnemyCharacterController->SetSpriteRenderer(pEnemySpriteRenderer);
+	//pEnemyCharacterController->SetIsMovingAnim(pEnemySpriteRenderer->GetIsActivePtr());
+	//pEnemyCharacterController->SetIsMovingRightAnim(pEnemySpriteRenderer->GetIsMirroredPtr());
+	//scene.Add(pMrEnemy);
+
+	//pMrEnemy = std::make_shared<GameObject>();
+	//pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 0, 12 }));
+	//pEnemyCharacterController = new ComponentCharacterController(pMrEnemy.get(), { CELL_WIDTH, CELL_WIDTH });
+	//pMrEnemy->AddComponent(pEnemyCharacterController);
+	//pEnemySpriteRenderer = new ComponentSpriteRenderer(pMrEnemy.get(), { CELL_WIDTH,CELL_WIDTH });
+	//pMrEnemy->AddComponent(pEnemySpriteRenderer);
+	//pEnemyEnemyController = new EnemyController(pMrEnemy.get(), SimonGlobalEnums::CharacterType::mrEgg);
+	//pMrEnemy->AddComponent(pEnemyEnemyController);
+	//pEnemyEnemyController->SetPlayerPtrs(m_PlayerPtrs);
+	//pEnemyEnemyController->SetCharacterController(pEnemyCharacterController);
+	//pEnemyCharacterController->SetSpriteRenderer(pEnemySpriteRenderer);
+	//pEnemyCharacterController->SetIsMovingAnim(pEnemySpriteRenderer->GetIsActivePtr());
+	//pEnemyCharacterController->SetIsMovingRightAnim(pEnemySpriteRenderer->GetIsMirroredPtr());
+	//scene.Add(pMrEnemy);
+#pragma endregion
+
+	//#pragma region DisplayAssignment
+	//	const auto pHealthDisplay{ std::make_shared<GameObject>() };
+	//	pHealthDisplay->AddComponent(new ComponentText(pHealthDisplay.get(), "HealthDisplayText", font));
+	//	const auto pComponentHealthDisplay{new ComponentHealthDisplay(pHealthDisplay.get(), pPeterPepper.get())};
+	//	pHealthDisplay->AddComponent(pComponentHealthDisplay);
+	//	pHealthDisplay->SetPosition(0, 100);
+	//	pComponentHealth->AddObserver(pComponentHealthDisplay);
+	//	scene.Add(pHealthDisplay);
+	//
+	//	const auto pScoreDisplay{ std::make_shared<GameObject>() };
+	//	pScoreDisplay->AddComponent(new ComponentText(pScoreDisplay.get(), "ScoreDisplayText", font));
+	//	const auto pComponentScoreDisplay{new ComponentScoreDisplay(pScoreDisplay.get(), pPeterPepper.get())};
+	//	pScoreDisplay->AddComponent(pComponentScoreDisplay);
+	//	pScoreDisplay->SetPosition(0, 130);
+	//	pComponentScoreManager->AddObserver(pComponentScoreDisplay);
+	//	scene.Add(pScoreDisplay);
+	//#pragma endregion
 
 #pragma region Sound
 		ServiceLocator::GetInstance().GetSoundSystem()->AddSound("Soundtrack", "./../Data/Sounds/Soundtrack.ogg");

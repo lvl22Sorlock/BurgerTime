@@ -7,6 +7,7 @@
 #include "CollisionManager.h"
 #include "DebugManager.h"
 #include "ComponentCharacterController.h"
+#include "BurgerTimeGlobal.h"
 
 //-------------------------------------------------------------------------
 //	Static datamembers
@@ -22,7 +23,7 @@ std::size_t EnemyController::GetTypeHash()
 	return typeid(*this).hash_code();
 }
 
-EnemyController::EnemyController(dae::GameObject* pParent, SimonGlobalEnums::CharacterType enemyType)
+EnemyController::EnemyController(dae::GameObject* pParent, SimonGlobalEnums::CharacterType enemyType, bool canRandomlyChangeDirection)
 	: ComponentBase(pParent)
 	, m_pCharacterController{nullptr}
 	, m_EnemyType{enemyType}
@@ -33,12 +34,18 @@ EnemyController::EnemyController(dae::GameObject* pParent, SimonGlobalEnums::Cha
 	, m_pIsOnPlatform{nullptr}
 	, m_pIsOnLeftPlatform{ nullptr }
 	, m_pIsOnRightPlatform{ nullptr }
+
 	, m_CurrentDirection{}
 	, m_WasOnLadder{false}
 	, m_WasOnPlatform{false}
 	, m_CanChangeHorizontalDirection{true}
 	, m_CanChangeVerticalDirection{true}
 	, m_HasInitializedDirection{false}
+
+	, m_CanRandomlyChangeDirection{canRandomlyChangeDirection}
+	, m_MIN_RANDOM_DIRECTION_CHANGE_TIME{3.0f}
+	, m_MAX_RANDOM_DIRECTION_CHANGE_TIME{10.0f}
+	, m_CurrentRandomDirectionChangeCooldown{3.0f}
 {}
 //-------------------------------------------------------------------------
 //	Member functions
@@ -88,14 +95,17 @@ Vector2<float> EnemyController::GetDirectionToNearestPlayer() const
 
 	Vector2<float> directionToPlayer{ closestPlayerPos - ENEMY_POS};
 	if (std::abs(directionToPlayer.x) < 0.1f) directionToPlayer.x = 0;
+	//else
+	//	directionToPlayer.x = directionToPlayer.x / std::abs(directionToPlayer.x) * 1.0f;
+
 	if (std::abs(directionToPlayer.y) < 0.1f) directionToPlayer.y = 0;
-	directionToPlayer.x = directionToPlayer.x / std::abs(directionToPlayer.x) * 1.0f;
-	directionToPlayer.y = directionToPlayer.y / std::abs(directionToPlayer.y) * 1.0f;
+	//else
+	//	directionToPlayer.y = directionToPlayer.y / std::abs(directionToPlayer.y) * 1.0f;
 
 	return directionToPlayer;
 }
 
-void EnemyController::Update(float)
+void EnemyController::FixedUpdate(float deltaTime)
 {
 	if (m_pCharacterController == nullptr) return;
 
@@ -105,15 +115,36 @@ void EnemyController::Update(float)
 		m_HasInitializedDirection = true;
 	}
 
-	CalculateNewCanChangeHorizontalDirection();
 	CalculateNewCanChangeVerticalDirection();
+	CalculateNewCanChangeHorizontalDirection();
+
+
+	if (m_CanRandomlyChangeDirection)
+	{
+		m_CurrentRandomDirectionChangeCooldown -= deltaTime;
+		if (m_CurrentRandomDirectionChangeCooldown <= 0)
+		{
+			m_CurrentRandomDirectionChangeCooldown 
+				= SimonGlobalFunctions::GetRandomFloat(m_MIN_RANDOM_DIRECTION_CHANGE_TIME, m_MAX_RANDOM_DIRECTION_CHANGE_TIME);
+
+			m_CanChangeHorizontalDirection = true;
+			m_CanChangeVerticalDirection = true;
+		}
+	}
 
 	TryChooseNewHorizontalDirection(directionToPlayer.x);
 	TryChooseNewVerticalDirection(directionToPlayer.y);
 
-	m_pCharacterController->MoveCharacter(m_CurrentDirection);
+	//if (m_CurrentDirection.x < m_CurrentDirection.y)
+	//	m_CurrentDirection.x = 0;
+	//else if (m_CurrentDirection.y < m_CurrentDirection.x)
+	//	m_CurrentDirection.y = 0;
 
-	std::cout << m_CurrentDirection.x << ' ' << m_CurrentDirection.y << std::endl;
+	//
+	m_pCharacterController->MoveCharacter(m_CurrentDirection);
+	//
+
+
 
 	m_WasOnLadder = *m_pIsOnLadder;
 	m_WasOnPlatform = *m_pIsOnPlatform || *m_pIsOnLeftPlatform || *m_pIsOnRightPlatform;
@@ -124,23 +155,29 @@ void EnemyController::TryChooseNewHorizontalDirection(float toPlayerDirection)
 	if (!m_CanChangeHorizontalDirection) return;
 	if (!*m_pIsOnPlatform) return;
 
-	if (*m_pIsOnPlatform)
-		m_CurrentDirection.x = toPlayerDirection / std::abs(toPlayerDirection);
+	if (*m_pIsOnPlatform) {
+		m_CurrentDirection.x = toPlayerDirection;// / std::abs(toPlayerDirection);
+		m_CanChangeVerticalDirection = false;
+	}
 
 	else if (toPlayerDirection > 0)
 	{
 		if (!*m_pIsOnRightPlatform)
 			return;
-		else
-			m_CurrentDirection.x = 1;
+		else{
+			m_CurrentDirection.x = toPlayerDirection; //1
+			m_CanChangeVerticalDirection = false;
+		}
 	}
 
 	else if (toPlayerDirection < 0)
 	{
 		if (!*m_pIsOnLeftPlatform)
 			return;
-		else
-			m_CurrentDirection.x = -1;
+		else{
+			m_CurrentDirection.x = toPlayerDirection;// -1;
+			m_CanChangeVerticalDirection = false;
+		}
 	}
 
 	m_CanChangeHorizontalDirection = false;
@@ -154,16 +191,18 @@ void EnemyController::TryChooseNewVerticalDirection(float toPlayerDirection)
 	{
 		if (!*m_pIsOnUpwardsLadder)
 			return;
-		else
-			m_CurrentDirection.y = 1;
+		else {
+			m_CurrentDirection.y = toPlayerDirection;// 1;
+		}
 	}
 
 	else if (toPlayerDirection < 0)
 	{
 		if (!*m_pIsOnDownwardsLadder)
 			return;
-		else
-			m_CurrentDirection.y = -1;
+		else {
+			m_CurrentDirection.y = toPlayerDirection;// -1;
+		}
 	}
 
 
@@ -173,11 +212,15 @@ void EnemyController::TryChooseNewVerticalDirection(float toPlayerDirection)
 void EnemyController::CalculateNewCanChangeHorizontalDirection()
 {
 	if (m_WasOnPlatform != (*m_pIsOnPlatform || *m_pIsOnLeftPlatform || *m_pIsOnRightPlatform))
+	//if (m_WasOnLadder != *m_pIsOnLadder)
+	{
 		m_CanChangeHorizontalDirection = true;
+	}
 }
 void EnemyController::CalculateNewCanChangeVerticalDirection()
 {
 	if (m_WasOnLadder  != *m_pIsOnLadder)
+	//if (m_WasOnPlatform != (*m_pIsOnPlatform || *m_pIsOnLeftPlatform || *m_pIsOnRightPlatform))
 		m_CanChangeVerticalDirection = true;
 }
 

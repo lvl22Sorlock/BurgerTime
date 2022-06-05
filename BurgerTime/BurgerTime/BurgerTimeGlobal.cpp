@@ -22,4 +22,13 @@ namespace SimonGlobalFunctions
 	{
 		return GetLeftBottomCornerPosIdx(idx);
 	}
+
+	float GetRandomFloat(float min, float max)
+	{
+		// https://stackoverflow.com/questions/686353/random-float-number-generation
+		float randomNr{ static_cast<float>(rand()) / static_cast<float>(RAND_MAX) }; // 0.0f to 1.0f
+		randomNr *= (max - min); // 0.0f to (max-min)
+		randomNr += min; // min to max
+		return randomNr;
+	}
 }

@@ -12,14 +12,14 @@ Scene::~Scene() = default;
 
 void Scene::Add(const std::shared_ptr<SceneObject>& object)
 {
-	m_Objects.push_back(object);
+	m_Objects.emplace_back(object);
 }
 
 void Scene::Update(float deltaTime)
 {
 	for(auto& object : m_Objects)
 	{
-		if (!object->HasParent())
+		if (!object->HasParent() && object->IsActive())
 			object->Update(deltaTime);
 	}
 }
@@ -28,7 +28,7 @@ void Scene::LateUpdate(float deltaTime)
 {
 	for (auto& object : m_Objects)
 	{
-		if (!object->HasParent())
+		if (!object->HasParent() && object->IsActive())
 			object->LateUpdate(deltaTime);
 	}
 }
@@ -37,7 +37,7 @@ void Scene::FixedUpdate(float deltaTime)
 {
 	for (auto& object : m_Objects)
 	{
-		if (!object->HasParent())
+		if (!object->HasParent() && object->IsActive())
 			object->FixedUpdate(deltaTime);
 	}
 }
@@ -46,7 +46,7 @@ void Scene::Render() const
 {
 	for (const auto& object : m_Objects)
 	{
-		if (!object->HasParent())
+		if (!object->HasParent() && object->IsActive())
 			object->Render();
 	}
 }

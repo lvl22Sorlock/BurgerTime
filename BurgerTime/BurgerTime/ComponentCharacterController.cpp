@@ -35,7 +35,7 @@ std::size_t ComponentCharacterController::GetTypeHash()
 	return typeid(*this).hash_code();
 }
 
-ComponentCharacterController::ComponentCharacterController(dae::GameObject* pParent, const Vector2<float>& widthHeight)
+ComponentCharacterController::ComponentCharacterController(dae::GameObject* pParent, const Vector2<float>& widthHeight, bool isPlayer)
 	:ComponentBase(pParent)
 	// Movement
 	, m_MoveDirection()
@@ -60,7 +60,10 @@ ComponentCharacterController::ComponentCharacterController(dae::GameObject* pPar
 	, m_LADDER_DOWN_ANIM_NAME{L"LadderDown"}
 	, m_CurrentAnimation{-1}
 	, m_CharacterType{ CharacterType::player}
-{}
+{
+	if (isPlayer)
+		CollisionManager::GetInstance().AddCollidingObject(static_cast<int32_t>(CollisionTag::player), this);
+}
 
 ComponentCharacterController::~ComponentCharacterController()
 {
@@ -71,7 +74,7 @@ ComponentCharacterController::~ComponentCharacterController()
 //	Member functions
 //-------------------------------------------------------------------------
 
-void ComponentCharacterController::Update(float deltaTime)
+void ComponentCharacterController::FixedUpdate(float deltaTime)
 {
 	SetAnimationVariables();
 	CalculateCollisionBox();
@@ -107,7 +110,13 @@ void ComponentCharacterController::Render() const
 void ComponentCharacterController::MoveCharacter(const Vector2<float>& moveDirection)
 {
 	//if (std::abs(moveDirection.x) >= 0.1f || std::abs(moveDirection.y) >= 1.0f)
-	m_IsMoving = true;
+	if (std::abs(moveDirection.x) >= EPSILON 
+		||
+		std::abs(moveDirection.y) >= EPSILON)
+	{
+		m_IsMoving = true;
+		std::cout << moveDirection.x << ' ' << moveDirection.y << std::endl;
+	}
 	//std::cout << moveDirection.x << ' ' << moveDirection.y << std::endl;
 
 	if (m_IsOnPlatform
@@ -190,10 +199,9 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		switch (playerNum)
 		{
 		case 0:
+		case 1:
 			inputManager.AddCommandToCommandList(pMoveLeftCommand);
 			inputManager.AddCommandToButton(left, InputType::IsDown, pMoveLeftCommand);
-			break;
-		case 1:
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftLeft, pMoveLeftCommand, 1);
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightLeft, pMoveLeftCommand, 1);
 			inputManager.AddCommandToButton(ControllerButton::DPadLeft, InputType::IsDown, pMoveLeftCommand, 1);
@@ -215,17 +223,16 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		switch (playerNum)
 		{
 		case 0:
+		case 1:
 			inputManager.AddCommandToCommandList(pMoveRightCommand);
 			inputManager.AddCommandToButton(right, InputType::IsDown, pMoveRightCommand);
-			break;
-		case 1:
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftRight, pMoveRightCommand, 1);
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightRight, pMoveRightCommand, 1);
-			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftRight, pMoveRightCommand, 2);
+			inputManager.AddCommandToButton(ControllerButton::DPadRight, InputType::IsDown, pMoveRightCommand, 1);
 			break;
 		case 2:
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightRight, pMoveRightCommand, 2);
-			inputManager.AddCommandToButton(ControllerButton::DPadRight, InputType::IsDown, pMoveRightCommand, 1);
+			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftRight, pMoveRightCommand, 2);
 			inputManager.AddCommandToButton(ControllerButton::DPadRight, InputType::IsDown, pMoveRightCommand, 2);
 			break;
 		default:
@@ -239,17 +246,16 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		switch (playerNum)
 		{
 		case 0:
+		case 1:
 			inputManager.AddCommandToCommandList(pMoveUpCommand);
 			inputManager.AddCommandToButton(up, InputType::IsDown, pMoveUpCommand);
-			break;
-		case 1:
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftUp, pMoveUpCommand, 1);
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightUp, pMoveUpCommand, 1);
-			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftUp, pMoveUpCommand, 2);
+			inputManager.AddCommandToButton(ControllerButton::DPadUp, InputType::IsDown, pMoveUpCommand, 1);
 			break;
 		case 2:
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightUp, pMoveUpCommand, 2);
-			inputManager.AddCommandToButton(ControllerButton::DPadUp, InputType::IsDown, pMoveUpCommand, 1);
+			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftUp, pMoveUpCommand, 2);
 			inputManager.AddCommandToButton(ControllerButton::DPadUp, InputType::IsDown, pMoveUpCommand, 2);
 			break;
 		default:
@@ -263,17 +269,16 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		switch (playerNum)
 		{
 		case 0:
+		case 1:
 			inputManager.AddCommandToCommandList(pMoveDownCommand);
 			inputManager.AddCommandToButton(down, InputType::IsDown, pMoveDownCommand);
-			break;
-		case 1:
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftDown, pMoveDownCommand, 1);
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightDown, pMoveDownCommand, 1);
-			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftDown, pMoveDownCommand, 2);
+			inputManager.AddCommandToButton(ControllerButton::DPadDown, InputType::IsDown, pMoveDownCommand, 1);
 			break;
 		case 2:
 			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::rightDown, pMoveDownCommand, 2);
-			inputManager.AddCommandToButton(ControllerButton::DPadDown, InputType::IsDown, pMoveDownCommand, 1);
+			inputManager.AddCommandToJoystickDirection(ControllerJoystickDirection::leftDown, pMoveDownCommand, 2);
 			inputManager.AddCommandToButton(ControllerButton::DPadDown, InputType::IsDown, pMoveDownCommand, 2);
 			break;
 		default:
@@ -342,7 +347,7 @@ void ComponentCharacterController::SetSpriteRenderer(ComponentSpriteRenderer* pS
 	ComponentSpriteRenderer::AnimInfo ladderUpAnimInfo{};
 	ComponentSpriteRenderer::AnimInfo ladderDownAnimInfo{};
 
-	pSpriteRenderer->SetSpritesheet("BurgerTimeSprites.png");
+	pSpriteRenderer->SetSpritesheet(SPRITESHEET_PATH);
 	switch (m_CharacterType)
 	{
 	case CharacterType::player:

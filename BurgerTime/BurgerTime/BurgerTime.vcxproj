@@ -185,7 +185,9 @@
     <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="ComponentTimer.cpp" />
     <ClCompile Include="EnemyController.cpp" />
+    <ClCompile Include="FallingBurgerIngredient.cpp" />
     <ClCompile Include="FPSCounterBehaviour.cpp" />
+    <ClCompile Include="IngredientPart.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="PepperCloud.cpp" />
     <ClCompile Include="Platform.cpp" />
@@ -204,8 +206,10 @@
     <ClInclude Include="ComponentTexture.h" />
     <ClInclude Include="ComponentTimer.h" />
     <ClInclude Include="EnemyController.h" />
+    <ClInclude Include="FallingBurgerIngredient.h" />
     <ClInclude Include="FPSCounterBehaviour.h" />
     <ClInclude Include="BurgerTimeGlobal.h" />
+    <ClInclude Include="IngredientPart.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="PepperCloud.h" />
     <ClInclude Include="Platform.h" />

@@ -37,7 +37,8 @@ void dae::GameObject::Update(float deltaTime)
 	// Update All Children
 	for (GameObject* pChild : m_ChildrenPtrs)
 	{
-		pChild->Update(deltaTime);
+		if (pChild->IsActive())
+			pChild->Update(deltaTime);
 	}
 }
 
@@ -52,7 +53,8 @@ void dae::GameObject::LateUpdate(float deltaTime)
 	// LateUpdate All Children
 	for (GameObject* pChild : m_ChildrenPtrs)
 	{
-		pChild->LateUpdate(deltaTime);
+		if (pChild->IsActive())
+			pChild->LateUpdate(deltaTime);
 	}
 }
 
@@ -67,7 +69,8 @@ void dae::GameObject::FixedUpdate(float deltaTime)
 	// FixedUpdate All Children
 	for (GameObject* pChild : m_ChildrenPtrs)
 	{
-		pChild->FixedUpdate(deltaTime);
+		if (pChild->IsActive())
+			pChild->FixedUpdate(deltaTime);
 	}
 }
 
@@ -82,10 +85,12 @@ void dae::GameObject::Render() const
 	// Render All Children
 	for (GameObject* pChild : m_ChildrenPtrs)
 	{
-		pChild->Render();
+		if (pChild->IsActive())
+			pChild->Render();
 	}
 }
 
+// sets local position
 void dae::GameObject::SetPosition(float x, float y)
 {
 	m_LocalTransform.SetPosition(x, y, 0.0f);
@@ -98,7 +103,17 @@ void GameObject::SetPosition(const Vector2<float>& newPosVector)
 	SetPosition(newPosVector.x, newPosVector.y);
 }
 
+// returns world position
 Vector2<float> GameObject::GetPosition() const
+{
+	Vector2<float> position{GetLocalPosition()};
+	if (m_pParent != nullptr)
+		position += m_pParent->GetPosition();
+	return position;
+}
+
+// returns local position
+Vector2<float> GameObject::GetLocalPosition() const
 {
 	return { m_LocalTransform.GetPosition().x, m_LocalTransform.GetPosition().y };
 }
@@ -143,6 +158,8 @@ void dae::GameObject::RemoveChild(GameObject* pChild)
 
 GameObject* dae::GameObject::AddChild(GameObject* pChild)
 {
+	if (m_pParent == pChild)
+		SetParent(nullptr);
 	m_ChildrenPtrs.insert(pChild);
 	pChild->SetParent(this);
 	return pChild;

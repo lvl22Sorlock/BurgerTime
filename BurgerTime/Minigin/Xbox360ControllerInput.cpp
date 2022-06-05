@@ -100,10 +100,10 @@ Xbox360ControllerInput::Xbox360ControllerInputImpl::Xbox360ControllerInputImpl(D
 	m_ControllerButtonValues[XINPUT_GAMEPAD_B]					= ControllerButton::ButtonB;
 	m_ControllerButtonValues[XINPUT_GAMEPAD_X]					= ControllerButton::ButtonX;
 	m_ControllerButtonValues[XINPUT_GAMEPAD_Y]					= ControllerButton::ButtonY;
-	m_ControllerButtonValues[XINPUT_GAMEPAD_DPAD_LEFT]			= ControllerButton::DPadRight;
-	m_ControllerButtonValues[XINPUT_GAMEPAD_DPAD_RIGHT]			= ControllerButton::DPadLeft;
-	m_ControllerButtonValues[XINPUT_GAMEPAD_DPAD_UP]			= ControllerButton::DPadDown;
-	m_ControllerButtonValues[XINPUT_GAMEPAD_DPAD_DOWN]			= ControllerButton::DPadUp;
+	m_ControllerButtonValues[XINPUT_GAMEPAD_DPAD_LEFT]			= ControllerButton::DPadLeft;
+	m_ControllerButtonValues[XINPUT_GAMEPAD_DPAD_RIGHT]			= ControllerButton::DPadRight;
+	m_ControllerButtonValues[XINPUT_GAMEPAD_DPAD_UP]			= ControllerButton::DPadUp;
+	m_ControllerButtonValues[XINPUT_GAMEPAD_DPAD_DOWN]			= ControllerButton::DPadDown;
 	m_ControllerButtonValues[XINPUT_GAMEPAD_LEFT_SHOULDER]		= ControllerButton::LeftShoulder;
 	m_ControllerButtonValues[XINPUT_GAMEPAD_RIGHT_SHOULDER]		= ControllerButton::RightShoulder;
 }
@@ -166,7 +166,7 @@ bool Xbox360ControllerInput::Xbox360ControllerInputImpl::IsJoystick(ControllerJo
 	}
 }
 
-bool  Xbox360ControllerInput::Xbox360ControllerInputImpl::IsUp(ControllerButton button, const XINPUT_GAMEPAD* pGamePadState) const
+bool  Xbox360ControllerInput::Xbox360ControllerInputImpl::IsDown(ControllerButton button, const XINPUT_GAMEPAD* pGamePadState) const
 {
 	XINPUT_GAMEPAD gamePadState{ m_CurrentInputState.Gamepad };
 	if (pGamePadState != nullptr)
@@ -211,22 +211,22 @@ bool  Xbox360ControllerInput::Xbox360ControllerInputImpl::IsUp(ControllerButton 
 	return false;
 }
 
-bool  Xbox360ControllerInput::Xbox360ControllerInputImpl::IsDown(ControllerButton button, const XINPUT_GAMEPAD* pGamePadState) const
+bool  Xbox360ControllerInput::Xbox360ControllerInputImpl::IsUp(ControllerButton button, const XINPUT_GAMEPAD* pGamePadState) const
 {
 	// because down = !up
 	// a normal button can't be half-down, it's either up or down
-	return !IsUp(button, pGamePadState);
-}
-
-bool Xbox360ControllerInput::Xbox360ControllerInputImpl::WasUp(ControllerButton button) const
-{
-	const XINPUT_GAMEPAD GAME_PAD_STATE = m_PreviousInputState.Gamepad;
-	return IsUp(button, &GAME_PAD_STATE);
+	return !IsDown(button, pGamePadState);
 }
 
 bool Xbox360ControllerInput::Xbox360ControllerInputImpl::WasDown(ControllerButton button) const
 {
-	return !WasUp(button);
+	const XINPUT_GAMEPAD GAME_PAD_STATE = m_PreviousInputState.Gamepad;
+	return IsDown(button, &GAME_PAD_STATE);
+}
+
+bool Xbox360ControllerInput::Xbox360ControllerInputImpl::WasUp(ControllerButton button) const
+{
+	return !WasDown(button);
 }
 
 bool  Xbox360ControllerInput::Xbox360ControllerInputImpl::IsPressed(ControllerButton button) const

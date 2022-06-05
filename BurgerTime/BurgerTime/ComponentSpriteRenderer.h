@@ -68,11 +68,10 @@ public:
 
 	void AddAnimation(const std::wstring& animName, const AnimInfo& animInfo);
 	bool TrySetAnimation(const std::wstring& animName);
+	void SetOffsetPixelsToNonAnimatedSprite(const Vector2<int>& offset);
 
 	bool* GetIsActivePtr();
 	bool* GetIsMirroredPtr();
-	//void SetIsActive(bool isActive);
-	//void SetIsMirrored(bool isMirrored);
 
 private:
 	//-------------------------------------------------------------------------

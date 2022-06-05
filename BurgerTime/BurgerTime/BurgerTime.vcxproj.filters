@@ -75,6 +75,12 @@
     <ClCompile Include="EnemyController.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="FallingBurgerIngredient.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="IngredientPart.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimePCH.h">
@@ -129,6 +135,12 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="EnemyController.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FallingBurgerIngredient.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="IngredientPart.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

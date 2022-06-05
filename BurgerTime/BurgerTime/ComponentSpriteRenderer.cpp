@@ -11,10 +11,15 @@ std::size_t ComponentSpriteRenderer::GetTypeHash()
 
 
 
-ComponentSpriteRenderer::ComponentSpriteRenderer(dae::GameObject* pParent, const Vector2<float>& widthHeight, bool hasAnimations, const Vector2<float>& posOffset)
+ComponentSpriteRenderer::ComponentSpriteRenderer(
+	dae::GameObject* pParent,
+	const Vector2<float>& widthHeight,
+	bool hasAnimations,
+	const Vector2<float>& posOffset
+)
 	:ComponentBase(pParent)
-	, m_SPRITE_WIDTH{16}	// for player1, should later be via parameter
-	, m_SPRITE_HEIGHT{16}
+	, m_SPRITE_WIDTH{ 16 }
+	, m_SPRITE_HEIGHT{ 16 }
 	, m_OffsetPixelsToFirstSprite{}
 	, m_CurrentColIdx{}
 	, m_NrCols{3}
@@ -22,7 +27,6 @@ ComponentSpriteRenderer::ComponentSpriteRenderer(dae::GameObject* pParent, const
 	, m_NrRows{1}
 	, m_TimeSinceLastSpriteSwitch{0.0f}
 	, m_TimeBetweenSpriteSwitches{1.0f / 15.0f}
-	//, m_IsPaused{}
 	, m_IsSpriteSheetSet{false}
 	, m_IsActive{true}
 	, m_IsMirrored{true}
@@ -56,9 +60,9 @@ void ComponentSpriteRenderer::Render() const
 {
 	if (!CheckIsValid()) return;
 
-	const glm::vec3 pos =
-		{ m_pParentGameObject->GetTransformConstRef().GetPosition().x + m_PosOffset.x,
-		  m_pParentGameObject->GetTransformConstRef().GetPosition().y + m_PosOffset.y,
+	glm::vec3 pos =
+		{ m_pParentGameObject->GetPosition().x + m_PosOffset.x,	//GetTransformConstRef().
+		  m_pParentGameObject->GetPosition().y + m_PosOffset.y,
 		  m_pParentGameObject->GetTransformConstRef().GetPosition().z };
 
 	SDL_Rect srcRect{ GetSpriteSheetPos().x, GetSpriteSheetPos().y, m_SPRITE_WIDTH, m_SPRITE_HEIGHT};
@@ -140,4 +144,9 @@ bool* ComponentSpriteRenderer::GetIsActivePtr()
 bool* ComponentSpriteRenderer::GetIsMirroredPtr()
 {
 	return &m_IsMirrored;
+}
+
+void ComponentSpriteRenderer::SetOffsetPixelsToNonAnimatedSprite(const Vector2<int>& offset)
+{
+	m_OffsetPixelsToFirstSprite = offset;
 }

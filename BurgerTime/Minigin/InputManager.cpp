@@ -18,8 +18,8 @@ using namespace inputEnums;
 
 InputManager::InputManager()
 	: m_pKeyboardInput{std::make_unique<KeyboardInput>()}
-	, m_pXbox360ControllerInputU1{ std::make_unique<Xbox360ControllerInput>(1) }
-	, m_pXbox360ControllerInputU2{ std::make_unique<Xbox360ControllerInput>(2) }
+	, m_pXbox360ControllerInputU1{ std::make_unique<Xbox360ControllerInput>(0) }
+	, m_pXbox360ControllerInputU2{ std::make_unique<Xbox360ControllerInput>(1) }
 	, m_ControllerCommandButtonsU1{}
 	, m_ControllerCommandButtonsU2{}
 	, m_ControllerCommandJoystickDirectionsU1{}

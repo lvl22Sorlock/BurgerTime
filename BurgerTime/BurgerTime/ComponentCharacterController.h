@@ -25,7 +25,7 @@ namespace SimonGlobalEnums
 class ComponentCharacterController final : public ComponentBase
 {
 public:
-	ComponentCharacterController(dae::GameObject* pParent, const Vector2<float>& widthHeight);
+	ComponentCharacterController(dae::GameObject* pParent, const Vector2<float>& widthHeight, bool isPlayer = false);
 	~ComponentCharacterController();
 
 	//-------------------------------------------------------------------------
@@ -41,7 +41,7 @@ public:
 	//	Member Functions
 	//-------------------------------------------------------------------------
 
-	virtual void Update(float deltaTime) override;
+	virtual void FixedUpdate(float deltaTime) override;
 	virtual void Render() const override;
 	virtual bool IsCollidingWithOther(const CollisionBox& otherCollisionBox) const override { return m_CollisionBox.IsColliding(otherCollisionBox); };
 

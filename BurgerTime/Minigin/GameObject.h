@@ -27,7 +27,6 @@ namespace dae
 		void Render() const override;
 		bool HasParent() const override;
 
-		//void AddComponent(const std::string& componentName, ComponentBase* pComponent);
 		void AddComponent(ComponentBase* pComponent);
 
 		template<typename ComponentType>
@@ -37,7 +36,6 @@ namespace dae
 			return GetComponentPtr<ComponentType>();
 		}
 
-			//ComponentBase* GetComponentPtr(const std::string& componentName);
 		ComponentBase* GetComponentPtr(const std::type_info& componentType);
 
 		template<typename ComponentType>
@@ -57,17 +55,13 @@ namespace dae
 		}
 
 
-			//void RemoveComponent(const std::string& componentName);
 		void RemoveComponent(const std::type_info& componentType);
 		const Transform& GetTransformConstRef();
 		
-		// Fix these (e.g. now you remove the parent for something but don't remove it as a child...)
 		void SetParent(GameObject* pParent);
 		GameObject* GetParentPtr() const;
 
 		size_t GetChildCount() const;
-		//GameObject* GetChildAtIdx(int index) const;
-			//void RemoveChild(int index);
 		void RemoveChild(GameObject* pChild);
 		GameObject* AddChild(GameObject* pChild);
 		std::unordered_set<GameObject*> GetChildrenPointers() const;
@@ -75,8 +69,8 @@ namespace dae
 		void SetPosition(float x, float y);
 		void SetPosition(const Vector2<float>& newPosVector);
 		Vector2<float> GetPosition() const;
+		Vector2<float> GetLocalPosition() const;
 		void Move(const Vector2<float>& moveVector);
-
 
 	private:
 		void CalculateTransform();
@@ -84,12 +78,8 @@ namespace dae
 		Transform m_Transform;
 		Transform m_LocalTransform;
 		bool m_HasPositionChanged;
-		//bool m_HasRotationChanged;
-		//bool m_HasScaleChanged;
 		GameObject* m_pParent;
 		std::unordered_set<GameObject*> m_ChildrenPtrs;
-		// contentmanager or texturemanager, and ComponentTexture instead
-		//std::shared_ptr<Texture2D> m_Texture{};
 
 		std::unordered_map<size_t, ComponentBase*> m_ComponentPtrs;
 	};

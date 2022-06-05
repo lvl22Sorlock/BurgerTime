@@ -6,7 +6,8 @@ public:
 	{
 		playerDied,
 		scoreGained,
-		playerHealthChanged
+		playerHealthChanged,
+		ingredientPartDropped
 	};
 
 	Observer() = default;

@@ -19,10 +19,8 @@
 #include "SoundSystemSDL.h"
 
 
+#include <time.h>
 
-// Additional includes
-#include <chrono>
-//
 
 using namespace std;
 
@@ -114,6 +112,8 @@ void dae::Minigin::Run()
 	std::shared_ptr<SoundSystemSDL> sound = std::make_shared<SoundSystemSDL>();
 	ServiceLocator::GetInstance().RegisterSoundSystem(sound.get());
 
+	srand(static_cast<unsigned int>(time(NULL)));
+
 	LoadGame();
 
 	{
@@ -136,6 +136,8 @@ void dae::Minigin::Run()
 			// Updates
 			const auto currentTime = std::chrono::high_resolution_clock::now();
 			float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+			if (m_IsTimePaused)
+				deltaTime = 0;
 			lastTime = currentTime;
 			lag += deltaTime;
 
@@ -164,4 +166,9 @@ void dae::Minigin::Run()
 void Minigin::SetLoadGameCallbackFunction(std::function<void(void)>* pLoadGameCallbackFunction)
 {
 	m_pLoadGameCallbackFunction = pLoadGameCallbackFunction;
+}
+
+void Minigin::SetTimePaused(bool isPaused)
+{
+	m_IsTimePaused = isPaused;
 }
