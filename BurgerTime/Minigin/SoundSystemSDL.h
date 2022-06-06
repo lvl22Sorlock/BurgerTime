@@ -5,7 +5,9 @@
 //-------------------------------------------------------------------------
 //	Include Files
 //-------------------------------------------------------------------------
+#pragma warning(push, 0)
 #include "SDL_mixer.h"
+#pragma warning(pop)
 #include "SoundSystem.h"
 #include <queue>
 #include <string>
@@ -85,16 +87,3 @@ private:
 	std::unordered_map<size_t, Mix_Music*> m_Sounds;
 	const int m_DEFAULT_VOLUME;
 };
-
-
-//// Code Snippets from demo
-// 
-//if (Mix_PausedMusic())
-//Mix_ResumeMusic();
-//else
-//Mix_PauseMusic();
-
-//volume = (volume + 1) << 1;
-//if (volume > SDL_MIX_MAXVOLUME)
-//volume = SDL_MIX_MAXVOLUME;
-//Mix_VolumeMusic(volume);

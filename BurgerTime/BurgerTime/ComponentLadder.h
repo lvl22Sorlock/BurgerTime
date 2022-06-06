@@ -44,7 +44,4 @@ private:
 	//-------------------------------------------------------------------------
 
 	CollisionBox m_CollisionBox;
-	//float m_XPosLeft;
-	//bool m_CanClimbUp;
-	//bool m_CanClimbDown;
 };

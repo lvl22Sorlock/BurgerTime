@@ -54,7 +54,3 @@ void ComponentText::SetText(const std::string& text)
 	m_Text = text;
 	m_NeedsUpdate = true;
 }
-//void ComponentText::SetPosition(float x, float y)
-//{
-//	m_Transform.SetPosition(x, y, 0.0f);
-//}

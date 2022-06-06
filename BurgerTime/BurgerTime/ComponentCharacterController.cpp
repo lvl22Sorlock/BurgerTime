@@ -37,7 +37,6 @@ std::size_t ComponentCharacterController::GetTypeHash()
 
 ComponentCharacterController::ComponentCharacterController(dae::GameObject* pParent, const Vector2<float>& widthHeight, bool isPlayer)
 	:ComponentBase(pParent)
-	// Movement
 	, m_MoveDirection()
 	, m_MOVEMENT_SPEED{90.f, 65.f}
 	, m_IsMoving{false}
@@ -109,14 +108,12 @@ void ComponentCharacterController::Render() const
 
 void ComponentCharacterController::MoveCharacter(const Vector2<float>& moveDirection)
 {
-	//if (std::abs(moveDirection.x) >= 0.1f || std::abs(moveDirection.y) >= 1.0f)
 	if (std::abs(moveDirection.x) >= EPSILON 
 		||
 		std::abs(moveDirection.y) >= EPSILON)
 	{
 		m_IsMoving = true;		
 	}
-	//std::cout << moveDirection.x << ' ' << moveDirection.y << std::endl;
 
 	if (m_IsOnPlatform
 		||
@@ -124,12 +121,10 @@ void ComponentCharacterController::MoveCharacter(const Vector2<float>& moveDirec
 		||
 		m_IsOnRightPlatform && moveDirection.x >= 0)
 		m_MoveDirection.x += moveDirection.x;
-	//m_MoveDirection.x = std::clamp(m_MoveDirection.x + moveDirection.x, -1.0f, 1.0f);
 
 	if (m_IsOnLadder)
 	{
 		m_MoveDirection.y += moveDirection.y;
-		//m_MoveDirection.y = std::clamp(m_MoveDirection.y + moveDirection.y, -1.0f, 1.0f);
 	}
 
 }
@@ -172,7 +167,6 @@ void ComponentCharacterController::CalculateMovement(float deltaTime)
 		if (m_IsOnLadder)
 		{
 			m_pParentGameObject->SetPosition(m_pParentGameObject->GetPosition().x, GetRoundedPos(m_pParentGameObject->GetPosition()).y);
-			//m_pParentGameObject->SetPosition(m_pParentGameObject->GetPosition().x, m_LadderPos.y);
 		}
 	}
 
@@ -192,7 +186,6 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 	const char right{ 'd' };
 	const char up{ 'w' };
 	const char down{ 's' };
-	//if (left != ' ')
 	{
 		Command* pMoveLeftCommand{ new MoveLeftCommand(this) };
 		switch (playerNum)
@@ -216,7 +209,6 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		}
 	}
 
-	//if (right != ' ')
 	{
 		Command * pMoveRightCommand{ new MoveRightCommand(this) };
 		switch (playerNum)
@@ -239,7 +231,6 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		}
 	}
 
-	//if (up != ' ')
 	{
 		Command * pMoveUpCommand{ new MoveUpCommand(this) };
 		switch (playerNum)
@@ -262,7 +253,6 @@ void ComponentCharacterController::InitializeMovementInput(InputManager& inputMa
 		}
 	}
 
-	//if (down != ' ')
 	{
 		Command * pMoveDownCommand{ new MoveDownCommand(this) };
 		switch (playerNum)
@@ -312,7 +302,6 @@ void ComponentCharacterController::CalculateCollisionBox()
 
 Vector2<float> ComponentCharacterController::GetRoundedPos(const Vector2<float>& pos) const
 {
-	// temp code
 	return { CELL_WIDTH * std::roundf(pos.x/ CELL_WIDTH), CELL_WIDTH * std::roundf(pos.y / CELL_WIDTH) };
 }
 

@@ -45,11 +45,6 @@ void ComponentScoreDisplay::Initialize(dae::GameObject* pScoreComponentSource)
 		throw;
 }
 
-//void ComponentScoreDisplay::Update(float)
-//{
-//	
-//}
-
 void ComponentScoreDisplay::OnNotify(Observer::Event event, void*)
 {
 	if (!m_pScoreManagerComponent || !m_pTextComponent)

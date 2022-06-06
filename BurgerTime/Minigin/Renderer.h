@@ -1,10 +1,6 @@
 #pragma once
 #include "Singleton.h"
 
-#pragma region Week02Assignment
-
-#pragma endregion
-
 namespace dae
 {
 	class Texture2D;
@@ -30,14 +26,6 @@ namespace dae
 
 		const SDL_Color& GetBackgroundColor() const { return m_clearColor; }
 		void SetBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
-
-	private:
-
-		#pragma region Week02Assignment
-		void CalculateExercise1Duration() const;
-		void CalculateExercise2Duration() const;
-		void CalculateExercise2BDuration() const;
-		#pragma endregion
 	};
 }
 

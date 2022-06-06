@@ -62,7 +62,7 @@ void ComponentSpriteRenderer::Render() const
 	if (!CheckIsValid()) return;
 
 	glm::vec3 pos =
-		{ m_pParentGameObject->GetPosition().x + m_PosOffset.x,	//GetTransformConstRef().
+		{ m_pParentGameObject->GetPosition().x + m_PosOffset.x,
 		  m_pParentGameObject->GetPosition().y + m_PosOffset.y,
 		  m_pParentGameObject->GetTransformConstRef().GetPosition().z };
 

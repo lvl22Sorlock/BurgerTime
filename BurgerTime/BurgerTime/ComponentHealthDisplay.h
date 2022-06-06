@@ -11,7 +11,6 @@ public:
 	ComponentHealthDisplay(dae::GameObject* pParent, dae::GameObject* pHealthComponentSource, const std::string& extraDisplayText = "Lives: ");
 	~ComponentHealthDisplay() = default;
 
-	//void Update(float deltaTime) override;
 	void OnNotify(Observer::Event event, void* pData = nullptr) override;
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 

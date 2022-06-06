@@ -149,8 +149,6 @@ namespace inputEnums
 		DPadRight,
 		DPadUp,
 		DPadDown,
-		//LeftThumb,
-		//RightThumb,
 		LeftShoulder,
 		RightShoulder,
 		options

@@ -27,10 +27,7 @@ std::size_t ComponentLadder::GetTypeHash()
 ComponentLadder::ComponentLadder(dae::GameObject* pParent, const CollisionBox& collisionBox, bool canClimbUp, bool canClimbDown)
 	:ComponentBase(pParent)
 	,m_CollisionBox{collisionBox}
-	//,m_CanClimbUp{canClimbUp}
-	//,m_CanClimbDown{canClimbDown}
 {
-	//CollisionManager::GetInstance().AddLadder(this);
 	if (canClimbUp && canClimbDown)
 		CollisionManager::GetInstance().AddCollidingObject(static_cast<int32_t>(CollisionTag::ladder), this);
 	else if (canClimbUp)

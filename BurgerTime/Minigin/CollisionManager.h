@@ -6,8 +6,6 @@
 #include "StructsEnums.h"
 #include <vector>
 #include <unordered_map>
-//class ComponentLadder;
-//class ComponentCharacterController;
 class ComponentBase;
 
 using namespace dae;
@@ -34,14 +32,9 @@ public:
 	//	Member Functions
 	//-------------------------------------------------------------------------
 
-	//void AddLadder(const ComponentLadder* pLadder);
-	//void AddPlayer(const ComponentCharacterController* pPlayer);
-	void AddCollidingObject(int32_t tag, ComponentBase* pObject);
 
+	void AddCollidingObject(int32_t tag, ComponentBase* pObject);
 	bool IsCollidingWithObjectOfTag(int32_t objectTag, const CollisionBox& collisionBox, ComponentBase** pOtherComponentPtr = nullptr, ComponentBase* pCallingObject = nullptr) const;
-	//bool IsCollidingWithLadder(const CollisionBox& collisionBox, Vector2<float>& ladderXPosOut) const;
-	//bool IsCollidingWithUpLadder(const CollisionBox& collisionBox, Vector2<float>& ladderXPosOut) const;
-	//bool IsCollidingWithDownLadder(const CollisionBox& collisionBox, Vector2<float>& ladderXPosOut) const;
 
 private:
 	CollisionManager() = default;
@@ -49,8 +42,6 @@ private:
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
-	//std::vector<const ComponentLadder*> m_LadderPtrs;
-	//std::vector<const ComponentCharacterController*> m_PlayerPtrs;
 	std::unordered_map<int32_t, std::vector<ComponentBase*>> m_CollidingObjectVectorsByTagMap;
 
 	//-------------------------------------------------------------------------

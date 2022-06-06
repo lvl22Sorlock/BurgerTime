@@ -51,10 +51,10 @@ void dae::Minigin::Initialize()
 	int flags = MIX_INIT_MP3 | MIX_INIT_OGG | MIX_INIT_FLAC;
 	int initted = Mix_Init(flags);
 	if ((initted&flags) != flags) {
-		printf("Mix_Init: Failed to init required ogg and flac support!\n");
+		printf("Mix_Init: Failed to init required ogg, mpc3 and flac support!\n");
 		printf("Mix_Init: %s\n", Mix_GetError());
 	}
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024) < 0)//== -1)
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_CHANNELS, 1024) < 0)
 	{
 		printf("Mix_OpenAudio: %s\n", Mix_GetError());
 	}

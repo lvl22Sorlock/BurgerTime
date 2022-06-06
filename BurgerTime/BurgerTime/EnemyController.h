@@ -53,15 +53,28 @@ private:
 		up,
 		down
 	};
+	enum class Direction
+	{
+		left,
+		right,
+		down,
+		up
+	};
 	//-------------------------------------------------------------------------
 	//	Private Member Functions
 	//-------------------------------------------------------------------------
 
 	Vector2<float> GetDirectionToNearestPlayer() const;
-	void TryChooseNewHorizontalDirection(float toPlayerDirection);
-	void TryChooseNewVerticalDirection(float toPlayerDirection);
-	void CalculateNewCanChangeHorizontalDirection();
-	void CalculateNewCanChangeVerticalDirection();
+	//void TryChooseNewHorizontalDirection(float toPlayerDirection);
+	//void TryChooseNewVerticalDirection(float toPlayerDirection);
+	//void CalculateNewCanChangeHorizontalDirection();
+	//void CalculateNewCanChangeVerticalDirection();
+
+	void RecalculateDirection(const Vector2<float> toPlayerVector);
+	bool IsOnLadderChanged() const;
+	bool IsOnPlatformChanged() const;
+	void UpdateWasBooleans();
+	void MoveCharacterInDirection() const;
 
 	//-------------------------------------------------------------------------
 	//	Data Members
@@ -81,6 +94,8 @@ private:
 
 	bool m_WasOnLadder;
 	bool m_WasOnPlatform;
+	bool m_WasOnLeftPlatform;
+	bool m_WasOnRightPlatform;
 	bool m_CanChangeVerticalDirection;
 	bool m_CanChangeHorizontalDirection;
 
@@ -91,5 +106,7 @@ private:
 
 	Vector2<float> m_CurrentDirection;
 	bool m_HasInitializedDirection;
+
+	Direction m_CurrentNewDirection;
 };
 

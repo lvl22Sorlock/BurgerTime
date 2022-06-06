@@ -1,11 +1,12 @@
 #pragma once
 //
+#pragma warning(push, 0)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <Xinput.h>
 
 #pragma comment(lib, "xinput.lib")
-
+#pragma warning(pop)
 #include <unordered_map>
 #include <memory>
 class Command;

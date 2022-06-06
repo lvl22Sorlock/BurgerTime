@@ -73,11 +73,11 @@ int main(int, char* [])
 
 void LoadGame(void)
 {
-#ifdef _DEBUG
-	DebugManager::GetInstance().SetIsDebugRendering(true);
-#else
-	DebugManager::GetInstance().SetIsDebugRendering(false);
-#endif // _DEBUG
+//#ifdef _DEBUG
+//	DebugManager::GetInstance().SetIsDebugRendering(true);
+//#else
+//	DebugManager::GetInstance().SetIsDebugRendering(false);
+//#endif // _DEBUG
 
 
 	auto& scene = SceneManager::GetInstance().CreateScene("BurgerTime");
@@ -99,10 +99,6 @@ void LoadGame(void)
 	scene.Add(logoObject);
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 18);
-	//auto to = std::make_shared<GameObject>();
-	//to->AddComponent(new ComponentText(to.get(), "Programming 4 Assignment", font));
-	//to->SetPosition(80, 20);
-	//scene.Add(to);
 #pragma endregion
 
 
@@ -176,20 +172,15 @@ void LoadGame(void)
 	
 
 #pragma region PeterPepper
+	
 	const auto pPeterPepper{ std::make_shared<GameObject>() };
 	pPeterPepper->SetPosition(GetPosFromIdx({ 0,2 }));
 
-	const auto pComponentHealth{ new ComponentHealth(pPeterPepper.get(), 3) };
-	pPeterPepper->AddComponent(pComponentHealth);
-
-	const auto pComponentScoreManager{ new ComponentScoreManager(pPeterPepper.get()) };
-	pPeterPepper->AddComponent(pComponentScoreManager);
-
-	const auto pCharacterController{ new ComponentCharacterController(pPeterPepper.get(), {CELL_WIDTH, CELL_WIDTH}, true)};
+	const auto pCharacterController{ new ComponentCharacterController(pPeterPepper.get(), {CELL_WIDTH, CELL_WIDTH}, true) };
 	pPeterPepper->AddComponent(pCharacterController);
 	pCharacterController->InitializeMovementInput(InputManager::GetInstance(), 1);
 
-	const auto pSpriteRenderer{ new ComponentSpriteRenderer(pPeterPepper.get(), {CELL_WIDTH,CELL_WIDTH})};
+	const auto pSpriteRenderer{ new ComponentSpriteRenderer(pPeterPepper.get(), {CELL_WIDTH,CELL_WIDTH}) };
 	pPeterPepper->AddComponent(pSpriteRenderer);
 	pCharacterController->SetSpriteRenderer(pSpriteRenderer);
 
@@ -197,11 +188,29 @@ void LoadGame(void)
 	pCharacterController->SetIsMovingRightAnim(pSpriteRenderer->GetIsMirroredPtr());
 
 	scene.Add(pPeterPepper);
+	
+	
+	const auto pMrsSalt{ std::make_shared<GameObject>() };
+	pMrsSalt->SetPosition(GetPosFromIdx({ 8,2 }));
+
+	const auto pMrsSaltCharacterController{ new ComponentCharacterController(pMrsSalt.get(), {CELL_WIDTH, CELL_WIDTH}, true) };
+	pMrsSalt->AddComponent(pMrsSaltCharacterController);
+	pMrsSaltCharacterController->InitializeMovementInput(InputManager::GetInstance(), 1);
+
+	const auto pMrsSaltSpriteRenderer{ new ComponentSpriteRenderer(pMrsSalt.get(), {CELL_WIDTH,CELL_WIDTH}) };
+	pMrsSalt->AddComponent(pMrsSaltSpriteRenderer);
+	pMrsSaltCharacterController->SetSpriteRenderer(pMrsSaltSpriteRenderer);
+
+	pMrsSaltCharacterController->SetIsMovingAnim(pMrsSaltSpriteRenderer->GetIsActivePtr());
+	pMrsSaltCharacterController->SetIsMovingRightAnim(pMrsSaltSpriteRenderer->GetIsMirroredPtr());
+
+	scene.Add(pMrsSalt);
+	
 #pragma endregion
 
 
 #pragma region Enemies
-	std::vector<const ComponentCharacterController*> m_PlayerPtrs{ pCharacterController };
+	std::vector<const ComponentCharacterController*> m_PlayerPtrs{ pCharacterController, pMrsSaltCharacterController };
 	auto pMrEnemy{ std::make_shared<GameObject>() };
 	pMrEnemy->SetPosition(SimonGlobalFunctions::GetPosFromIdx({ 18, 12 }));
 
@@ -269,11 +278,5 @@ void LoadGame(void)
 		InputManager::GetInstance().AddCommandToButton('P', InputType::IsPressed, pToggleMenuCommand);
 		InputManager::GetInstance().AddCommandToButton(ControllerButton::options, InputType::IsPressed, pToggleMenuCommand, 1);
 		InputManager::GetInstance().AddCommandToButton(ControllerButton::options, InputType::IsPressed, pToggleMenuCommand, 2);
-
-		//MenuManager::LeaveMainMenuCommand* pLeaveMainMenuCommand{ new MenuManager::LeaveMainMenuCommand() };
-		//InputManager::GetInstance().AddCommandToCommandList(pLeaveMainMenuCommand);
-		//InputManager::GetInstance().AddCommandToButton('P', InputType::IsPressed, pLeaveMainMenuCommand);
-		//InputManager::GetInstance().AddCommandToButton(ControllerButton::options, InputType::IsPressed, pLeaveMainMenuCommand, 1);
-		//InputManager::GetInstance().AddCommandToButton(ControllerButton::options, InputType::IsPressed, pLeaveMainMenuCommand, 2);
 #pragma endregion
 }

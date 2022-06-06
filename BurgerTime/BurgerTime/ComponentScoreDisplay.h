@@ -11,7 +11,6 @@ public:
 	ComponentScoreDisplay(dae::GameObject* pParent, dae::GameObject* pScoreComponentSource, const std::string& extraDisplayText = "Score: ");
 	~ComponentScoreDisplay() = default;
 
-	//void Update(float deltaTime) override;
 	void OnNotify(Event event, void* pData = nullptr) override;
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 

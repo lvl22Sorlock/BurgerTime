@@ -5,7 +5,7 @@ namespace dae
 	class Singleton
 	{
 	public:
-		static T& GetInstance()		// for this to work the derived class's constructor needs to be public ??
+		static T& GetInstance()
 		{
 			static T instance{};
 			return instance;

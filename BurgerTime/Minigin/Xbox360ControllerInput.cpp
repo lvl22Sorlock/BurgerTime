@@ -185,10 +185,10 @@ bool  Xbox360ControllerInput::Xbox360ControllerInputImpl::IsDown(ControllerButto
 	case ControllerButton::DPadRight:
 	case ControllerButton::DPadUp:
 	case ControllerButton::DPadDown:
-		// if inputmanager doesn't know what this button is
+		// if doesn't know what this button is
 		if (m_ControllerButtonValues.find(buttonValue) == m_ControllerButtonValues.end()) return false;
 
-		// if a button has been pressed and that is the button that we are checking for, return true
+		// if a button has been pressed and it is the button that we are checking for, return true
 		pressedButton = m_ControllerButtonValues.at(buttonValue);
 		if (pressedButton == button)
 			return true;

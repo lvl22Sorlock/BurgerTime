@@ -22,7 +22,6 @@ public:
 	virtual bool IsCollidingWithOther(const CollisionBox&) const override { return false; };
 
 	void SetText(const std::string& text);
-	//void SetPosition(float x, float y);
 
 	virtual std::size_t GetTypeHash() override;
 

@@ -113,7 +113,6 @@ private:
 	bool m_IsMirrored;
 
 	// Update with time
-	//bool m_IsPaused;
 	float m_TimeSinceLastSpriteSwitch;
 	float m_TimeBetweenSpriteSwitches;
 };

@@ -1,10 +1,11 @@
 #include "MiniginPCH.h"
 #include "InputManager.h"
 
+#pragma warning(push, 0)
 #include "../imgui-1.87/imgui.h"
 #include "../imgui-1.87/imgui_impl_opengl2.h"
 #include "../imgui-1.87/imgui_impl_sdl.h"
-
+#pragma warning(pop)
 
 #include "Command.hpp"
 #include <string>

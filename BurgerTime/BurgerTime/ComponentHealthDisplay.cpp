@@ -28,18 +28,8 @@ ComponentHealthDisplay::ComponentHealthDisplay(dae::GameObject* pParent, dae::Ga
 
 void ComponentHealthDisplay::Initialize()
 {
-	/*ComponentBase* pHealthComponent{ nullptr };
-	pHealthComponent = m_pParentGameObject->GetComponentPtr(typeid(ComponentHealth));
-	ComponentBase* pTextComponent{ nullptr };
-	pTextComponent = m_pParentGameObject->GetComponentPtr(typeid(ComponentText));
-
-	if (!pHealthComponent || !pTextComponent)
-		throw;
-
-	m_pHealthComponent = dynamic_cast<ComponentHealth*>(pHealthComponent);*/
 	m_pHealthComponent	= m_pParentGameObject->GetComponentPtr<ComponentHealth>();
 	m_pTextComponent	= m_pParentGameObject->GetComponentPtr<ComponentText>();
-	//m_pTextComponent = dynamic_cast<ComponentText*>(pTextComponent);
 
 	if (!m_pHealthComponent || !m_pTextComponent)
 		throw;
@@ -53,14 +43,6 @@ void ComponentHealthDisplay::Initialize(dae::GameObject* pHealthComponentSource)
 	if (!m_pHealthComponent || !m_pTextComponent)
 		throw;
 }
-
-//void ComponentHealthDisplay::Update(float)
-//{
-//	if (!m_pHealthComponent || !m_pTextComponent)
-//		throw;
-//
-//	m_pTextComponent->SetText(m_ExtraText + std::to_string(m_pHealthComponent->GetCurrentHealth()));
-//}
 
 void ComponentHealthDisplay::OnNotify(Observer::Event event, void*)
 {

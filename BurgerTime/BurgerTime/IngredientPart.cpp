@@ -83,5 +83,5 @@ void IngredientPart::SetIsDroppedFalse()
 
 void IngredientPart::SetIsOnPlate()
 {
-
+	m_IsOnPlate = true;
 }
